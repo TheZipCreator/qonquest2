@@ -1,3 +1,4 @@
+/// Contains code handling windows and widgets
 module qonquest2.window;
 
 import qonquest2.display;

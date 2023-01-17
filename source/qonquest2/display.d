@@ -1,3 +1,4 @@
+/// Contains all code for displaying things to the screen
 module qonquest2.display;
 
 import std.file, std.conv;
@@ -145,6 +146,25 @@ void render(Checkbox c, bool active) {
 	text(localization[c.label], c.absX+Checkbox.SIZE, c.absY, 1, Color3f(1, 1, 1));
 }
 
+/// Renders a province
+void render(Province p, float multiplier = 1) {
+	Color3f(p.color).mul(multiplier).draw;
+	glBegin(GL_QUADS);
+	foreach(pix; p.pixels) {
+		glVertex2f(pix.x,   pix.y  );
+		glVertex2f(pix.x+1, pix.y  );
+		glVertex2f(pix.x+1, pix.y+1);
+		glVertex2f(pix.x,   pix.y+1);
+	}
+	glEnd();
+}
+
+/// Renders a province's text (must be called after all provinces are rendered to avoid the text being clobbered)
+void renderText(Province p) {
+	textCenter(localization[p.name], p.center.x, p.center.y, 1, Color3f(p.color).inverse);
+	textCenter(p.troops.to!string, p.center.x, p.center.y+CHAR_SIZE, 1, Color3f(p.color).inverse.mul(.5));
+}
+
 /// Redraws the opengl scene
 void redrawOpenGlScene() {
 	glLoadIdentity();
@@ -157,23 +177,11 @@ void redrawOpenGlScene() {
 	glColor3f(0, 0.75, 1);
 	glVertex2f(WIDTH, HEIGHT);
 	glVertex2f(0, HEIGHT);
-	// draw provinces
-	foreach(p; provinces) {
-		auto col = p.color;
-		Color3f(col).draw;
-		foreach(pix; p.pixels) {
-			glVertex2f(pix.x,   pix.y  );
-			glVertex2f(pix.x+1, pix.y  );
-			glVertex2f(pix.x+1, pix.y+1);
-			glVertex2f(pix.x,   pix.y+1);
-		}
-	}
 	glEnd();
-	// draw province names & troop counts
-	foreach(p; provinces) {
-		textCenter(localization[p.name], p.center.x, p.center.y, 1, Color3f(p.color).inverse);
-		textCenter(p.troops.to!string, p.center.x, p.center.y+CHAR_SIZE, 1, Color3f(p.color).inverse.mul(.5));
-	}
+	foreach(p; provinces)
+		p.render();
+	foreach(p; provinces)
+		p.renderText();
 	foreach(w; windows)
 		w.render();
 }

@@ -13,3 +13,4 @@ qonquest2-test-*
 *.o
 *.obj
 *.lst
+*.pdb

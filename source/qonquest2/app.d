@@ -1,3 +1,4 @@
+/// Contains main and input handling
 module qonquest2.app;
 
 import arsd.simpledisplay;

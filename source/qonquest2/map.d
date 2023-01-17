@@ -1,3 +1,4 @@
+/// Contains code handling the map
 module qonquest2.map;
 
 import std.json, std.file;

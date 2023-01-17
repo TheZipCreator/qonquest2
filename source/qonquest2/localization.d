@@ -1,3 +1,4 @@
+/// Contains code handling localization
 module qonquest2.localization;
 
 import std.file, std.json;
