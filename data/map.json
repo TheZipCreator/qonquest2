@@ -1,0 +1,25 @@
+{
+	"provinces": [
+		{
+			"name": "spain",
+			"color": [255, 233, 0],
+			"center": [309, 560]
+		},
+		{
+			"name": "portugal",
+			"color": [0, 255, 8],
+			"center": [236, 570]
+		},
+		{
+			"name": "france",
+			"color": [15, 0, 255],
+			"center": [411, 409]
+		}
+	],
+	"countries": [
+		{
+			"name": "spain",
+			"color": [255, 233, 0]
+		}
+	]
+}

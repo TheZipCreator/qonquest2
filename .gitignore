@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/qonquest2
+qonquest2.so
+qonquest2.dylib
+qonquest2.dll
+qonquest2.a
+qonquest2.lib
+qonquest2-test-*
+*.exe
+*.o
+*.obj
+*.lst

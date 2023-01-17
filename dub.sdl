@@ -1,0 +1,7 @@
+name "qonquest2"
+description "A strategy game, sequel to Qonquest"
+authors "TheZipCreator"
+copyright "Copyright © 2023, TheZipCreator"
+license "GNU General Public License v3.0"
+dependency "arsd-official:simpledisplay" version="~>10.9.8"
+dependency "arsd-official:png" version="~>10.9.8"
