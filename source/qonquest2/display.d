@@ -230,14 +230,12 @@ void redrawOpenGlScene() {
 	glOrtho(0, WIDTH, HEIGHT, 0, -1, 1);
 	glBegin(GL_QUADS);
 	// draw game background
-	float bgMultiplier = (){
-		switch(mapMode) {
-			default:
-				return 1;
-			case MapMode.SELECT_COUNTRY:
-				return 0.5;
-		}
-	}();
+	float bgMultiplier = 1;
+	{
+		import std.algorithm;
+		if([MapMode.SELECT_COUNTRY, MapMode.MOVE_TROOPS_1, MapMode.MOVE_TROOPS_2].canFind(mapMode))
+			bgMultiplier = 0.5;
+	}
 	glColor3f(0, 0, 1*bgMultiplier);
 	glVertex2f(0, 0);
 	glVertex2f(WIDTH, 0);
@@ -245,16 +243,16 @@ void redrawOpenGlScene() {
 	glVertex2f(WIDTH, HEIGHT);
 	glVertex2f(0, HEIGHT);
 	glEnd();
-	void renderCountries() {
+	void renderCountries(float m = 1) {
 		foreach(p; provinces)
-			p.renderCountry();
+			p.renderCountry(m);
 		foreach(c; countries)
 			c.renderText();
 	}
-	void renderProvinces() {
-		foreach(p; provinces)
-			p.render();
-		foreach(p; provinces)
+	void renderProvinces(float m = 1, Province[] provs = provinces) {
+		foreach(p; provs)
+			p.render(m);
+		foreach(p; provs)
 			p.renderText();
 	}
 	void renderWindows() {
@@ -274,6 +272,16 @@ void redrawOpenGlScene() {
 			case MapMode.PROVINCE:
 				renderProvinces();
 				renderWindows();
+				break;
+			case MapMode.MOVE_TROOPS_1:
+				renderProvinces(0.5);
+				renderProvinces(1, players[currentPlayer].country.ownedProvinces);
+				textCenter(localization["select-source-province"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
+				break;
+			case MapMode.MOVE_TROOPS_2:
+				renderProvinces(0.5);
+				renderProvinces(1, selectedProvince.neighbors);
+				textCenter(localization["select-destination-province"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
 				break;
 			default:
 				break;

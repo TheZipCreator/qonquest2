@@ -15,6 +15,14 @@ class Country {
 		this.name = name;
 		this.color = color;
 	}
+
+	Province[] ownedProvinces() {
+		Province[] ret;
+		foreach(p; provinces)
+			if(p.owner is this)
+				ret ~= p;
+		return ret;
+	}
 }
 
 /// Represents a province

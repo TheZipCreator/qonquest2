@@ -25,13 +25,18 @@ enum State {
 }
 State state; /// The current state
 
-Player[] players;
+Player[] players;     /// Players in the game
+size_t currentPlayer; /// Current player
 
 /// Controls the current map mode
 enum MapMode {
-	PROVINCE, COUNTRY, SELECT_COUNTRY
+	// normal map modes
+	PROVINCE, COUNTRY, 
+	// selection map modes
+	SELECT_COUNTRY, MOVE_TROOPS_1, MOVE_TROOPS_2
 }
-MapMode mapMode;
+Province selectedProvince; /// Interim value for moving troops
+MapMode mapMode;           /// The current map mode
 
 void main(string[] args) {
 	win = new SimpleWindow(WIDTH, HEIGHT, "Qonquest 2", OpenGlOptions.yes, Resizability.automaticallyScaleIfPossible);
@@ -58,14 +63,20 @@ void changeState(State newState) {
 			windows = [mainMenuWindow];
 			break;
 		case State.GAME:
-			actionsWindow = new Window(300, 50, 150, 200, "actions");
+			actionsWindow = new Window(300, 50, 150, 300, "actions");
+			actionsWindow.addWidget(new Button(actionsWindow, 10, 230, 130, 24, "end-turn", () {
+			               // TODO
+			             }))
+			             .addWidget(new Button(actionsWindow, 10, 230, 100, 24, "move-troops", () {
+			               mapMode = MapMode.MOVE_TROOPS_1;		 
+			             }));
 			viewWindow = new Window(50, 50, 100, 200, "view");
 			viewWindow.addWidget(new Checkbox(viewWindow, 10, 10, "actions", &actionsWindow.visible))
 			          .addWidget(new Checkbox(viewWindow, 10, 200-Checkbox.SIZE-10, "provinces", () {
-									mapMode = mapMode.PROVINCE;
-								}, () {
-									mapMode = mapMode.COUNTRY;
-								}));
+			            mapMode = mapMode.PROVINCE;
+			          }, () {
+			            mapMode = mapMode.COUNTRY;
+			          }));
 			windows = [viewWindow, actionsWindow];
 	}
 }
@@ -109,6 +120,14 @@ void mouseEvent(MouseEvent e) {
 								players ~= Player(clickedProvince.owner);
 								mapMode = MapMode.COUNTRY;
 							}
+							break;
+						case MapMode.MOVE_TROOPS_1:
+							if(clickedProvince !is null) {
+								selectedProvince = clickedProvince;
+								mapMode = MapMode.MOVE_TROOPS_2;
+							}
+							break;
+						case MapMode.MOVE_TROOPS_2:
 							break;
 						default:
 							break;

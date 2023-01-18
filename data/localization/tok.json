@@ -8,4 +8,7 @@
 	"play": "o musi",
 	"select-country": "o anu e ma",
 	"provinces": "ma lili"
+	"select-source-province": "o anu e ma kama",
+	"select-destination-province": "o anu e ma tawa",
+	"move-troops": "o tawa e jan utala"
 }
