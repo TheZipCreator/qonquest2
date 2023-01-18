@@ -25,6 +25,12 @@ enum State {
 }
 State state; /// The current state
 
+/// Controls the current map mode
+enum MapMode {
+	PROVINCE, COUNTRY, SELECT_COUNTRY
+}
+MapMode mapMode;
+
 void main(string[] args) {
 	win = new SimpleWindow(WIDTH, HEIGHT, "Qonquest 2", OpenGlOptions.yes, Resizability.automaticallyScaleIfPossible);
 	loadMap();
@@ -42,7 +48,11 @@ void changeState(State newState) {
 	state = newState;
 	final switch(state) {
 		case State.MAIN_MENU:
-			mainMenuWindow = new Window(WIDTH/4, HEIGHT/4, WIDTH/2, HEIGHT/2, "main-menu");
+			mainMenuWindow = new Window(WIDTH/4, HEIGHT/4, 600, 400, "main-menu");
+			mainMenuWindow.addWidget(new Button(mainMenuWindow, 50, 50, 500, 24, "play", () {
+				changeState(State.GAME);
+				mapMode = MapMode.SELECT_COUNTRY;
+			}));
 			windows = [mainMenuWindow];
 			break;
 		case State.GAME:
@@ -65,7 +75,7 @@ void mouseEvent(MouseEvent e) {
 	alias MET = MouseEventType;
 	final switch(e.type) {
 		case MET.buttonPressed:
-			foreach(w; windows) {
+			foreach_reverse(i, w; windows) {
 				if(!w.visible)
 					continue;
 				if(w.click(e.x-w.x, e.y-w.y, e.button))
@@ -73,6 +83,8 @@ void mouseEvent(MouseEvent e) {
 				if(w.inTitleBar(e.x, e.y)) {
 					heldWindow = w;
 					heldWindowPos = Point(e.x-w.x, e.y-w.y);
+					windows = windows[0..i]~windows[i+1..$];
+					windows ~= w;
 					break;
 				}
 			}

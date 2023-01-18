@@ -107,7 +107,7 @@ void textCenter(string s, float x, float y, float scale = 1, Color3f col = Color
 float textLen(string s, float scale = 1) {
 	float len = 0;
 	foreach(dchar c; s)
-		len += characters[c].fontSpacing;
+		len += characters[c].fontSpacing*scale;
 	return len;
 }
 
@@ -147,8 +147,10 @@ void render(Checkbox c, bool active) {
 }
 /// Renders a button
 void render(Button b, bool active) {
-	auto parent = c.parent;
-	
+	auto parent = b.parent;
+	Button.COLOR.draw;
+	rect(b.absX, b.absY, b.width, b.height);
+	textCenter(localization[b.label], b.absX+(b.width/2), b.absY);
 }
 
 /// Renders a province
@@ -176,18 +178,38 @@ void redrawOpenGlScene() {
 	glOrtho(0, WIDTH, HEIGHT, 0, -1, 1);
 	glBegin(GL_QUADS);
 	// draw game background
-	glColor3f(0, 0, 1);
+	float bgMultiplier = (){
+		switch(mapMode) {
+			default:
+				return 1;
+			case MapMode.SELECT_COUNTRY:
+				return 0.5;
+		}
+	}();
+	glColor3f(0, 0, 1*bgMultiplier);
 	glVertex2f(0, 0);
 	glVertex2f(WIDTH, 0);
-	glColor3f(0, 0.75, 1);
+	glColor3f(0, 0.75*bgMultiplier, 1*bgMultiplier);
 	glVertex2f(WIDTH, HEIGHT);
 	glVertex2f(0, HEIGHT);
 	glEnd();
 	if(state == State.GAME) {
-		foreach(p; provinces)
-			p.render();
-		foreach(p; provinces)
-			p.renderText();
+		switch(mapMode) {
+			case MapMode.SELECT_COUNTRY:
+				foreach(p; provinces)
+					p.renderCountry();
+				foreach(c; countries)
+					c.renderText();
+				textCenter(localization["select-country"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
+				break;
+			case MapMode.PROVINCE:
+				foreach(p; provinces)
+					p.render();
+				foreach(p; provinces)
+					p.renderText();
+			default:
+				break;
+		}
 	}
 	foreach(w; windows)
 		w.render();

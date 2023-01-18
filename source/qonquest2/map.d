@@ -9,6 +9,7 @@ import arsd.simpledisplay : Point, Color;
 /// Represents a country
 class Country {
 	string name; /// Name of this country
+	Color color; /// Color of this country
 }
 
 /// Represents a province
@@ -47,12 +48,29 @@ private Point toPoint(JSONValue v) {
 	return Point(cast(ushort)(arr[0].integer), cast(ushort)(arr[1].integer));
 }
 
+class MapLoadException : Exception {
+	this(string msg) {
+		super(msg);
+	}
+}
+
 /// Loads the map (including countries & provinces)
 void loadMap() {
 	auto mapJSON  = parseJSON(readText("data/map.json"));
+	// load countries
+	foreach(country; mapJSON["countries"].array) {
+		string name = country["name"].str;
+		if(name in countries)
+			throw new MapLoadException("Duplicate country "~name~".");
+		auto col = country["color"].toColor();
+		countries[name] = new Country(name, col);
+	}
+	// load provinces
 	Province[Color] provinceColors; // temporary lookup table to make processing map more efficient
 	foreach(province; mapJSON["provinces"].array) {
 		auto col = province["color"].toColor();
+		if(col in provinceColors)
+			throw new MapLoadException("Duplicate province with color "~province["color"].toString~".");
 		auto prov = new Province(province["name"].str, col, province["center"].toPoint);
 		provinces ~= prov;
 		provinceColors[col] = prov;

@@ -83,7 +83,7 @@ class Button : Widget {
 	enum COLOR = Color3f(.75, .75, .75);
 
 	this(Window parent, int x, int y, int width, int height, string label, void delegate() onClick) {
-		super(parent, x, y);
+		super(parent, x, y, label);
 		this.width = width;
 		this.height = height;
 		this.label = label;

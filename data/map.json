@@ -2,16 +2,19 @@
 	"provinces": [
 		{
 			"name": "spain",
+			"owner": "spain",
 			"color": [255, 233, 0],
 			"center": [309, 560]
 		},
 		{
 			"name": "portugal",
+			"owner": "portugal",
 			"color": [0, 255, 8],
 			"center": [236, 570]
 		},
 		{
 			"name": "france",
+			"owner": "france",
 			"color": [15, 0, 255],
 			"center": [411, 409]
 		}
@@ -20,6 +23,14 @@
 		{
 			"name": "spain",
 			"color": [255, 233, 0]
+		},
+		{
+			"name": "portugal",
+			"color": [0, 255, 8]
+		},
+		{
+			"name": "france",
+			"color": [15, 0, 255]
 		}
 	]
 }
