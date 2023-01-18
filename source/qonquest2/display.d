@@ -145,6 +145,11 @@ void render(Checkbox c, bool active) {
 	}
 	text(localization[c.label], c.absX+Checkbox.SIZE, c.absY, 1, Color3f(1, 1, 1));
 }
+/// Renders a button
+void render(Button b, bool active) {
+	auto parent = c.parent;
+	
+}
 
 /// Renders a province
 void render(Province p, float multiplier = 1) {
@@ -178,10 +183,12 @@ void redrawOpenGlScene() {
 	glVertex2f(WIDTH, HEIGHT);
 	glVertex2f(0, HEIGHT);
 	glEnd();
-	foreach(p; provinces)
-		p.render();
-	foreach(p; provinces)
-		p.renderText();
+	if(state == State.GAME) {
+		foreach(p; provinces)
+			p.render();
+		foreach(p; provinces)
+			p.renderText();
+	}
 	foreach(w; windows)
 		w.render();
 }

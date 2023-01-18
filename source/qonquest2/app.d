@@ -12,24 +12,45 @@ SimpleWindow win;
 Window heldWindow;   /// Currently held window. null if no window is being held
 Point heldWindowPos; /// Where the held window is being dragged from
 
-// A few various windows
+// main menu windows
+Window mainMenuWindow;
 
+// game windows
 Window viewWindow;
 Window actionsWindow;
+
+/// Controls the state of the game
+enum State {
+	MAIN_MENU, GAME
+}
+State state; /// The current state
 
 void main(string[] args) {
 	win = new SimpleWindow(WIDTH, HEIGHT, "Qonquest 2", OpenGlOptions.yes, Resizability.automaticallyScaleIfPossible);
 	loadMap();
 	loadLocalization("eng");
 	import std.functional : toDelegate;
-	// initialize windows
-	actionsWindow = new Window(300, 50, 150, 200, "actions");
-	viewWindow = new Window(50, 50, 100, 200, "view");
-	viewWindow.addWidget(new Checkbox(viewWindow, 10, 10, "actions", &actionsWindow.visible));
-	windows = [viewWindow, actionsWindow];
+	changeState(State.MAIN_MENU);
 	// start event loop
 	win.redrawOpenGlScene = (&redrawOpenGlScene).toDelegate;
 	win.eventLoop(16, (&redraw).toDelegate, (&keyEvent).toDelegate, (&mouseEvent).toDelegate);
+}
+
+/// Changes the current state
+void changeState(State newState) {
+	windows = [];
+	state = newState;
+	final switch(state) {
+		case State.MAIN_MENU:
+			mainMenuWindow = new Window(WIDTH/4, HEIGHT/4, WIDTH/2, HEIGHT/2, "main-menu");
+			windows = [mainMenuWindow];
+			break;
+		case State.GAME:
+			actionsWindow = new Window(300, 50, 150, 200, "actions");
+			viewWindow = new Window(50, 50, 100, 200, "view");
+			viewWindow.addWidget(new Checkbox(viewWindow, 10, 10, "actions", &actionsWindow.visible));
+			windows = [viewWindow, actionsWindow];
+	}
 }
 
 void redraw() {

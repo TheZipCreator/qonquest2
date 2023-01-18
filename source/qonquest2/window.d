@@ -73,6 +73,35 @@ class Checkbox : Widget {
 	}
 }
 
+/// A single button
+class Button : Widget {
+	string label;
+	void delegate() onClick;
+	int width;
+	int height;
+
+	enum COLOR = Color3f(.75, .75, .75);
+
+	this(Window parent, int x, int y, int width, int height, string label, void delegate() onClick) {
+		super(parent, x, y);
+		this.width = width;
+		this.height = height;
+		this.label = label;
+		this.onClick = onClick;
+	}
+
+	override void draw(bool active) {
+		this.render(active);
+	}
+
+	override bool click(int x, int y, MouseButton b) {
+		if(b != MouseButton.left || x < 0 || y < 0 || x > width || y > height)
+			return false;
+		onClick();
+		return true;
+	}
+}
+
 class Window {
 	Widget[] widgets;    /// Widgets in this window
 	string title;        /// Title of this window
