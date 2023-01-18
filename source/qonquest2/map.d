@@ -10,6 +10,11 @@ import arsd.simpledisplay : Point, Color;
 class Country {
 	string name; /// Name of this country
 	Color color; /// Color of this country
+
+	this(string name, Color color) {
+		this.name = name;
+		this.color = color;
+	}
 }
 
 /// Represents a province
@@ -22,10 +27,11 @@ class Province {
 	Province[] neighbors; /// Neighbors of this province
 	int troops;           /// How many troops are in this province
 
-	this(string name, Color col, Point center) {
+	this(string name, Color col, Point center, Country owner) {
 		this.name  = name;
 		this.color = col;
 		this.center = center;
+		this.owner = owner;
 	}
 
 	override string toString() {
@@ -71,7 +77,10 @@ void loadMap() {
 		auto col = province["color"].toColor();
 		if(col in provinceColors)
 			throw new MapLoadException("Duplicate province with color "~province["color"].toString~".");
-		auto prov = new Province(province["name"].str, col, province["center"].toPoint);
+		auto owner = province["owner"].str;
+		if(owner !in countries)
+			throw new MapLoadException("Unknown country "~owner~".");
+		auto prov = new Province(province["name"].str, col, province["center"].toPoint, countries[owner]);
 		provinces ~= prov;
 		provinceColors[col] = prov;
 	}

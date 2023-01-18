@@ -43,6 +43,31 @@ struct Color3f {
 	}
 }
 
+/// A point with two floats
+struct Point2f {
+	float x = 0;
+	float y = 0;
+	this(float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+	/// Construct from a point
+	this(Point p) {
+		x = p.x;
+		y = p.y;
+	}
+
+	void opOpAssign(string op = "+")(Point2f other) {
+		x += other.x;
+		y += other.y;
+	}
+
+	void opOpAssign(string op = "/")(float amt) {
+		x /= amt;
+		y /= amt;
+	}
+}
+
 /// A single character in the font
 struct Char {
 	bool[CHAR_SIZE][CHAR_SIZE] pixels; /// Pixels of this character
@@ -166,6 +191,33 @@ void render(Province p, float multiplier = 1) {
 	glEnd();
 }
 
+/// Renders a province's country
+void renderCountry(Province p, float multiplier = 1) {
+	Color3f(p.owner.color).mul(multiplier).draw;
+	glBegin(GL_QUADS);
+	foreach(pix; p.pixels) {
+		glVertex2f(pix.x,   pix.y  );
+		glVertex2f(pix.x+1, pix.y  );
+		glVertex2f(pix.x+1, pix.y+1);
+		glVertex2f(pix.x,   pix.y+1);
+	}
+	glEnd();
+}
+
+/// Renders the text for a country
+void renderText(Country c) {
+	Point2f avg;
+	int count = 0;
+	foreach(p; provinces) {
+		if(p.owner !is c)
+			continue;
+		count++;
+		avg += Point2f(p.center);
+	}
+	avg /= count;
+	textCenter(localization[c.name], avg.x, avg.y, 1+((count-1)/2), Color3f(c.color).inverse);
+}
+
 /// Renders a province's text (must be called after all provinces are rendered to avoid the text being clobbered)
 void renderText(Province p) {
 	textCenter(localization[p.name], p.center.x, p.center.y, 1, Color3f(p.color).inverse);
@@ -193,24 +245,40 @@ void redrawOpenGlScene() {
 	glVertex2f(WIDTH, HEIGHT);
 	glVertex2f(0, HEIGHT);
 	glEnd();
+	void renderCountries() {
+		foreach(p; provinces)
+			p.renderCountry();
+		foreach(c; countries)
+			c.renderText();
+	}
+	void renderProvinces() {
+		foreach(p; provinces)
+			p.render();
+		foreach(p; provinces)
+			p.renderText();
+	}
+	void renderWindows() {
+		foreach(w; windows)
+			w.render();
+	}
 	if(state == State.GAME) {
 		switch(mapMode) {
 			case MapMode.SELECT_COUNTRY:
-				foreach(p; provinces)
-					p.renderCountry();
-				foreach(c; countries)
-					c.renderText();
+				renderCountries();
 				textCenter(localization["select-country"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
 				break;
+			case MapMode.COUNTRY:
+				renderCountries();
+				renderWindows();
+				break;
 			case MapMode.PROVINCE:
-				foreach(p; provinces)
-					p.render();
-				foreach(p; provinces)
-					p.renderText();
+				renderProvinces();
+				renderWindows();
+				break;
 			default:
 				break;
 		}
+		return;
 	}
-	foreach(w; windows)
-		w.render();
+	renderWindows();
 }

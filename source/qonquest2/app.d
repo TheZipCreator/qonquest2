@@ -5,7 +5,7 @@ import arsd.simpledisplay;
 
 import std.stdio;
 
-import qonquest2.display, qonquest2.map, qonquest2.window, qonquest2.localization;
+import qonquest2.display, qonquest2.map, qonquest2.window, qonquest2.localization, qonquest2.logic;
 import qonquest2.window : Window;
 
 SimpleWindow win;
@@ -24,6 +24,8 @@ enum State {
 	MAIN_MENU, GAME
 }
 State state; /// The current state
+
+Player[] players;
 
 /// Controls the current map mode
 enum MapMode {
@@ -58,7 +60,12 @@ void changeState(State newState) {
 		case State.GAME:
 			actionsWindow = new Window(300, 50, 150, 200, "actions");
 			viewWindow = new Window(50, 50, 100, 200, "view");
-			viewWindow.addWidget(new Checkbox(viewWindow, 10, 10, "actions", &actionsWindow.visible));
+			viewWindow.addWidget(new Checkbox(viewWindow, 10, 10, "actions", &actionsWindow.visible))
+			          .addWidget(new Checkbox(viewWindow, 10, 200-Checkbox.SIZE-10, "provinces", () {
+									mapMode = mapMode.PROVINCE;
+								}, () {
+									mapMode = mapMode.COUNTRY;
+								}));
 			windows = [viewWindow, actionsWindow];
 	}
 }
@@ -86,6 +93,26 @@ void mouseEvent(MouseEvent e) {
 					windows = windows[0..i]~windows[i+1..$];
 					windows ~= w;
 					break;
+				}
+				if(state == State.GAME) {
+					Province clickedProvince;
+					outer:
+					foreach(p; provinces)
+						foreach(pix; p.pixels)
+							if(pix.x == e.x && pix.y == e.y) {
+								clickedProvince = p;
+								break outer;
+							}
+					switch(mapMode) {
+						case MapMode.SELECT_COUNTRY:
+							if(clickedProvince !is null) {
+								players ~= Player(clickedProvince.owner);
+								mapMode = MapMode.COUNTRY;
+							}
+							break;
+						default:
+							break;
+					}
 				}
 			}
 			break;
