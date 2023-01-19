@@ -14,6 +14,10 @@
 	"move": "Move",
 	"deploy": "Deploy",
 	"end-turn": "End Turn",
-	"or-press-escape": "or press escape to cancel.",
-	"deploy-troops": "Deploy troops. (%s remaining.)"
+	"or-press-escape": "or press escape to cancel",
+	"deploy-troops": "Deploy troops",
+	"select-province-to-deploy": "Select province to deploy troops to",
+	"undo-action": "Undo Action",
+	"vs": " vs. ",
+	"battle-of": "Battle of"
 }

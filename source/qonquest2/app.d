@@ -28,12 +28,19 @@ State state; /// The current state
 Player[] players;     /// Players in the game
 size_t currentPlayer; /// Current player
 
+/// gets the current player
+Player player() {
+	if(players[currentPlayer] is null)
+		throw new Exception("Player is null!");
+	return players[currentPlayer];
+}
+
 /// Controls the current map mode
 enum MapMode {
 	// normal map modes
 	PROVINCE, COUNTRY, 
 	// selection map modes
-	SELECT_COUNTRY, MOVE_TROOPS_1, MOVE_TROOPS_2
+	SELECT_COUNTRY, MOVE_TROOPS_1, MOVE_TROOPS_2, DEPLOY_TROOPS
 }
 Province selectedProvince; /// Interim value for moving troops
 MapMode mapMode;           /// The current map mode
@@ -64,16 +71,30 @@ void changeState(State newState) {
 			windows = [mainMenuWindow];
 			break;
 		case State.GAME:
-			actionsWindow = new Window(300, 50, 300, 400, "actions");
-			actionsWindow.addWidget(new Button(actionsWindow, 10, 370, 280, 24, "end-turn", () {
-			               // TODO
-			             }))
-			             .addWidget(new CountButton(actionsWindow, 10, 340, 280, 24, "move-troops", 0, int.max, (int amt) {
-			               prevMapMode = mapMode;
-									   mapMode = MapMode.MOVE_TROOPS_1;		
-										 availableProvinces = provinces.filter!(p => p !is null && p.owner is players[currentPlayer].country && p.effectiveTroops > 0).array;
-			             }))
-									 .addWidget(new ActionBox(actionsWindow));
+			actionsWindow = new Window(300, 50, 300, 500, "actions");
+			actionsWindow .addWidget(new Button(actionsWindow, 10, 500-30, 280, 24, "end-turn", () {
+			                endTurn();
+			              }))
+										.addWidget(new Button(actionsWindow, 10, 500-30*2, 280, 24, "undo-action", () {
+											if(player.actions.length > 0)
+												player.actions = player.actions[0..$-1];
+										}))
+			              .addWidget(new CountButton(actionsWindow, 10, 500-30*3, 280, 24, "move-troops", 1, int.max, (int amt) {
+			                prevMapMode = mapMode;
+									    mapMode = MapMode.MOVE_TROOPS_1;		
+										  availableProvinces = provinces.filter!(p => p !is null && p.owner is player.country && p.effectiveTroops >= amt).array;
+			             	  troopAmt = amt;
+									  }))
+									  .addWidget(new CountButton(actionsWindow, 10, 500-30*4, 280, 24, "deploy-troops", 0, int.max, (int amt) {
+										  if(amt < 1)
+												return;
+											availableProvinces = player.country.ownedProvinces();
+										  prevMapMode = mapMode;
+										  mapMode = MapMode.DEPLOY_TROOPS;
+										  troopAmt = amt;
+									  }))
+										
+									  .addWidget(new ActionBox(actionsWindow));
 			viewWindow = new Window(50, 50, 100, 200, "view");
 			viewWindow.addWidget(new Checkbox(viewWindow, 10, 10, "actions", &actionsWindow.visible))
 			          .addWidget(new Checkbox(viewWindow, 10, 200-Checkbox.SIZE-10, "provinces", () {
@@ -87,6 +108,9 @@ void changeState(State newState) {
 
 void redraw() {
 	win.redrawOpenGlSceneSoon();
+	if(players.length > 0 && actionsWindow !is null) {
+		(cast(CountButton)actionsWindow.getWidget("deploy-troops")).max = player.country.deployableTroops;
+	}
 }
 
 void keyEvent(KeyEvent e) {
@@ -97,6 +121,7 @@ void keyEvent(KeyEvent e) {
 			switch(mapMode) {
 				case MapMode.MOVE_TROOPS_1:
 				case MapMode.MOVE_TROOPS_2:
+				case MapMode.DEPLOY_TROOPS:
 					if(e.key == Key.Escape) {
 						mapMode = prevMapMode;
 					}
@@ -107,7 +132,8 @@ void keyEvent(KeyEvent e) {
 	}
 }
 
-Province[] availableProvinces;
+Province[] availableProvinces; /// Available provinces in doing actions
+int troopAmt;                  /// Troop amount for deployment and movement
 
 void mouseEvent(MouseEvent e) {
 	alias MET = MouseEventType;
@@ -139,7 +165,7 @@ void mouseEvent(MouseEvent e) {
 				switch(mapMode) {
 					case MapMode.SELECT_COUNTRY:
 						if(clickedProvince !is null) {
-							players ~= Player(clickedProvince.owner);
+							players ~= new Player(clickedProvince.owner);
 							mapMode = MapMode.COUNTRY;
 						}
 						break;
@@ -153,7 +179,14 @@ void mouseEvent(MouseEvent e) {
 					case MapMode.MOVE_TROOPS_2:
 						if(availableProvinces.canFind(clickedProvince)) {
 							mapMode = prevMapMode;
-							players[currentPlayer].actions ~= new MovementAction(selectedProvince, clickedProvince, selectedProvince.troops);
+							player.actions ~= new MovementAction(selectedProvince, clickedProvince, troopAmt);
+						}
+						break;
+					case MapMode.DEPLOY_TROOPS:
+						if(availableProvinces.canFind(clickedProvince)) {
+							mapMode = prevMapMode;
+							player.actions ~= new DeploymentAction(clickedProvince, troopAmt);
+							player.country.deployableTroops -= troopAmt;
 						}
 						break;
 					default:

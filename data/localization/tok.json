@@ -15,5 +15,9 @@
 	"deploy": "sin",
 	"end-turn": "o pini e sike",
 	"or-press-escape": "anu, sina wile ala la, o luka e <ESC>",
-	"deploy-troops": "o pali e jan utala sin. (%s li lon.)"
+	"deploy-troops": "o pali e jan utala sin",
+	"select-province-to-deploy": "jan utala sin la, o anu e ma",
+	"undo-action": "o weka e pali",
+	"vs": " li utala e ",
+	"battle-of": "utala pi "
 }

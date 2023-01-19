@@ -2,6 +2,7 @@
 module qonquest2.map;
 
 import std.json, std.file;
+import qonquest2.display : Color3f;
 
 import arsd.png;
 import arsd.simpledisplay : Point, Color;
@@ -10,6 +11,7 @@ import arsd.simpledisplay : Point, Color;
 class Country {
 	string name; /// Name of this country
 	Color color; /// Color of this country
+	int deployableTroops = 2; /// Number of troops can currently be deployed
 
 	this(string name, Color color) {
 		this.name = name;
@@ -24,8 +26,8 @@ class Country {
 		return ret;
 	}
 
-	int deployableTroops() {
-		return cast(int)ownedProvinces.length*2;
+	string hexCode() {
+		return "`"~Color3f(color).toHexString;
 	}
 }
 
@@ -48,6 +50,10 @@ class Province {
 
 	override string toString() {
 		return name;
+	}
+
+	string hexCode() {
+		return "`"~Color3f(color).toHexString;
 	}
 }
 

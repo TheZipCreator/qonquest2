@@ -14,6 +14,7 @@ abstract class Widget {
 		this.parent = parent;
 		this.x = x;
 		this.y = y;
+		this.id = id;
 	}
 
 	void draw(bool active) {}                /// What to do when drawn
@@ -129,15 +130,19 @@ class CountButton : Widget {
 
 	override void draw(bool active) {
 		this.render(active);
+		checkBounds();
+	}
+
+	void checkBounds() {
+		if(count < min)
+			count = min;
+		else if(count > max)
+			count = max;
 	}
 
 	override bool click(int x, int y, MouseButton b) {
-		scope(exit) {
-			if(count < min)
-				count = min;
-			else if(count > max)
-				count = max;
-		}
+		scope(exit)
+			checkBounds();
 		if(b == MouseButton.left) {
 			if(x < 0 || y < 0 || x > width || y > height)
 				return false;
@@ -233,7 +238,7 @@ class Window {
 
 	/// Get a widget via its id
 	Widget getWidget(string id) {
-		foreach(w; widgets)
+		foreach(w; widgets) 
 			if(w.id == id)
 				return w;
 		return null;

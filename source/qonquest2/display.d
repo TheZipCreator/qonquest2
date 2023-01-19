@@ -135,11 +135,16 @@ static this() {
 void text(string s, float x, float y, float scale = 1, Color3f col = Color3f(0, 0, 0)) {
 	string colorCode;
 	bool getColorCode;
+	int orgx = x;
 	foreach(i, dchar c; s) {
 		switch(c) {
 			case '`':
 				getColorCode = true;
 				colorCode = "";
+				break;
+			case '\n':
+				x = orgx;
+				y += CHAR_SIZE*scale;
 				break;
 			default:
 				if(getColorCode) {
@@ -213,18 +218,17 @@ void render(Button b, bool active) {
 /// Renders an action box
 void render(ActionBox b, bool active) {
 	auto parent = b.parent;
-	auto actions = players[currentPlayer].actions;
+	auto actions = player.actions;
 	foreach(i, a; actions) {
 		string t = "unknown action";
 		if(auto ma = cast(MovementAction)a)
-			// Move: n from A to B
-			t = localization["move"]~": "~ma.amt.to!string~" from `"~Color3f(ma.source.color).toHexString~localization[ma.source.name]
-				~"`FFFFFF to `"~Color3f(ma.dest.color).toHexString~localization[ma.dest.name];
+			// Move: n, A -> B
+			t = localization["move"]~": "~ma.amt.to!string~", `"~Color3f(ma.source.color).toHexString~localization[ma.source.name]
+				~"`FFFFFF -> `"~Color3f(ma.dest.color).toHexString~localization[ma.dest.name];
 		else if(auto da = cast(DeploymentAction)a)
-			// Deploy: n to A
-			t = localization["deploy"]~": "~da.amt.to!string~" to `"~Color3f(da.province.color).toHexString~localization[da.province.name];
+			// Deploy: n, A
+			t = localization["deploy"]~": "~da.amt.to!string~", `"~Color3f(da.province.color).toHexString~localization[da.province.name];
 		text(t, parent.x+ActionBox.SPACING, parent.y+ActionBox.SPACING+i*CHAR_SIZE, 1, Color3f(1, 1, 1));
-		glColor3f(.5, 0, 0);
 	}
 }
 /// Renders a count button
@@ -282,7 +286,13 @@ void renderText(Country c) {
 /// Renders a province's text (must be called after all provinces are rendered to avoid the text being clobbered)
 void renderText(Province p) {
 	textCenter(localization[p.name], p.center.x, p.center.y, 1, Color3f(p.color).inverse);
-	textCenter(p.troops.to!string, p.center.x, p.center.y+CHAR_SIZE, 1, Color3f(p.color).inverse.mul(.5));
+	string troopsText = p.troops.to!string;
+	int effective = p.effectiveTroops;
+	if(p.effectiveTroops != p.troops) {
+		int dif = effective-p.troops;
+		troopsText ~= " ("~(dif > 0 ? "+" : "")~dif.to!string~")";
+	}
+	textCenter(troopsText, p.center.x, p.center.y+CHAR_SIZE, 1, Color3f(p.color).inverse.mul(.5));
 }
 
 /// Redraws the opengl scene
@@ -292,7 +302,7 @@ void redrawOpenGlScene() {
 	glBegin(GL_QUADS);
 	// draw game background
 	float bgMultiplier = 1;
-	if([MapMode.SELECT_COUNTRY, MapMode.MOVE_TROOPS_1, MapMode.MOVE_TROOPS_2].canFind(mapMode))
+	if([MapMode.SELECT_COUNTRY, MapMode.MOVE_TROOPS_1, MapMode.MOVE_TROOPS_2, MapMode.DEPLOY_TROOPS].canFind(mapMode))
 		bgMultiplier = 0.5;
 	glColor3f(0, 0, 1*bgMultiplier);
 	glVertex2f(0, 0);
@@ -341,6 +351,12 @@ void redrawOpenGlScene() {
 				renderProvinces(0.5);
 				renderProvinces(1, availableProvinces);
 				textCenter(localization["select-destination-province"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
+				textCenter(localization["or-press-escape"], WIDTH/2, CHAR_SIZE*3, 1, Color3f(1, 1, 1));
+				break;
+			case MapMode.DEPLOY_TROOPS:
+				renderProvinces(0.5);
+				renderProvinces(1, availableProvinces);
+				textCenter(localization["select-province-to-deploy"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
 				textCenter(localization["or-press-escape"], WIDTH/2, CHAR_SIZE*3, 1, Color3f(1, 1, 1));
 				break;
 			default:
