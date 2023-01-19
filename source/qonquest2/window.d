@@ -103,6 +103,60 @@ class Button : Widget {
 	}
 }
 
+/// A button with a counter
+class CountButton : Widget {
+	string label;
+	void delegate(int) onClick;
+	int width;
+	int height;
+	int count;
+	int min;
+	int max;
+
+	enum COLOR = Color3f(.75, .75, .75);
+	enum COUNT_COLOR = Color3f(.25, .25, .25);
+	enum COUNT_SIZE = 0.25;
+
+	this(Window parent, int x, int y, int width, int height, string label, int min, int max, void delegate(int) onClick) {
+		super(parent, x, y, label);
+		this.width = width;
+		this.height = height;
+		this.label = label;
+		this.onClick = onClick;
+		this.min = min;
+		this.max = max;
+	}
+
+	override void draw(bool active) {
+		this.render(active);
+	}
+
+	override bool click(int x, int y, MouseButton b) {
+		scope(exit) {
+			if(count < min)
+				count = min;
+			else if(count > max)
+				count = max;
+		}
+		if(b == MouseButton.left) {
+			if(x < 0 || y < 0 || x > width || y > height)
+				return false;
+			if(x < width*COUNT_SIZE) {
+				count++;
+				return true;
+			}
+			onClick(count);
+			return true;
+		} else if(b == MouseButton.right) {
+			if(x < 0 ||  y < 0 || x > width*COUNT_SIZE || y > height)
+				return false;
+			count--;
+			return true;
+		}
+		return false;
+	}
+}
+
 /// A widget displaying all actions.
 class ActionBox : Widget {
 	this(Window parent) {
@@ -175,6 +229,14 @@ class Window {
 	/// Whether a given point is inside this window's title bar
 	bool inTitleBar(int a, int b) {
 		return a >= x && a <= x+width && b >= y-TITLE_HEIGHT && b <= y;
+	}
+
+	/// Get a widget via its id
+	Widget getWidget(string id) {
+		foreach(w; widgets)
+			if(w.id == id)
+				return w;
+		return null;
 	}
 }
 

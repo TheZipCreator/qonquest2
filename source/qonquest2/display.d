@@ -217,25 +217,26 @@ void render(ActionBox b, bool active) {
 	foreach(i, a; actions) {
 		string t = "unknown action";
 		if(auto ma = cast(MovementAction)a)
-			// Move: A -> B
-			t = localization["move"]~": `"~Color3f(ma.source.color).toHexString~localization[ma.source.name]
-				~"`FFFFFF -> `"~Color3f(ma.dest.color).toHexString~localization[ma.dest.name];
+			// Move: n from A to B
+			t = localization["move"]~": "~ma.amt.to!string~" from `"~Color3f(ma.source.color).toHexString~localization[ma.source.name]
+				~"`FFFFFF to `"~Color3f(ma.dest.color).toHexString~localization[ma.dest.name];
 		else if(auto da = cast(DeploymentAction)a)
 			// Deploy: n to A
 			t = localization["deploy"]~": "~da.amt.to!string~" to `"~Color3f(da.province.color).toHexString~localization[da.province.name];
 		text(t, parent.x+ActionBox.SPACING, parent.y+ActionBox.SPACING+i*CHAR_SIZE, 1, Color3f(1, 1, 1));
 		glColor3f(.5, 0, 0);
-		float x = parent.x+parent.width-ActionBox.SPACING-ActionBox.X_SIZE;
-		float y = parent.y+ActionBox.SPACING+i*CHAR_SIZE; 
-		rect(x, y, ActionBox.X_SIZE, ActionBox.X_SIZE);
-		glColor3f(1, 0, 0);
-		glBegin(GL_LINES);
-		glVertex2f(x+1, y+1);
-		glVertex2f(x+ActionBox.X_SIZE, y+ActionBox.X_SIZE);
-		glVertex2f(x+ActionBox.X_SIZE, y+1);
-		glVertex2f(x+1, y+ActionBox.X_SIZE);
-		glEnd();
 	}
+}
+/// Renders a count button
+void render(CountButton b, bool active) {
+	auto parent = b.parent;
+	CountButton.COLOR.draw;
+	alias COUNT_SIZE = CountButton.COUNT_SIZE;
+	rect(b.absX+COUNT_SIZE*b.width, b.absY, b.width-COUNT_SIZE*b.width, b.height);
+	textCenter(localization[b.label], b.absX+(COUNT_SIZE*b.width)/2+b.width/2, b.absY);
+	CountButton.COUNT_COLOR.draw;
+	rect(b.absX, b.absY, b.width*COUNT_SIZE, b.height);
+	textCenter(b.count.to!string~(b.max == int.max ? "" : "/"~b.max.to!string), b.absX+(b.width*COUNT_SIZE)/2, b.absY, 1, Color3f(1, 1, 1));
 }
 
 /// Renders a province
@@ -332,13 +333,13 @@ void redrawOpenGlScene() {
 				break;
 			case MapMode.MOVE_TROOPS_1:
 				renderProvinces(0.5);
-				renderProvinces(1, provinces.filter!(p => canMoveTroopsFrom(p)).array);
+				renderProvinces(1, availableProvinces);
 				textCenter(localization["select-source-province"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
 				textCenter(localization["or-press-escape"], WIDTH/2, CHAR_SIZE*3, 1, Color3f(1, 1, 1));
 				break;
 			case MapMode.MOVE_TROOPS_2:
 				renderProvinces(0.5);
-				renderProvinces(1, provinces.filter!(p => canMoveTroopsTo(selectedProvince, p)).array);
+				renderProvinces(1, availableProvinces);
 				textCenter(localization["select-destination-province"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
 				textCenter(localization["or-press-escape"], WIDTH/2, CHAR_SIZE*3, 1, Color3f(1, 1, 1));
 				break;

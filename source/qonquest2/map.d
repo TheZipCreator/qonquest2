@@ -23,6 +23,10 @@ class Country {
 				ret ~= p;
 		return ret;
 	}
+
+	int deployableTroops() {
+		return cast(int)ownedProvinces.length*2;
+	}
 }
 
 /// Represents a province

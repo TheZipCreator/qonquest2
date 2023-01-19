@@ -3,7 +3,7 @@ module qonquest2.app;
 
 import arsd.simpledisplay;
 
-import std.stdio, std.algorithm;
+import std.stdio, std.algorithm, std.array;
 
 import qonquest2.display, qonquest2.map, qonquest2.window, qonquest2.localization, qonquest2.logic;
 import qonquest2.window : Window;
@@ -68,9 +68,10 @@ void changeState(State newState) {
 			actionsWindow.addWidget(new Button(actionsWindow, 10, 370, 280, 24, "end-turn", () {
 			               // TODO
 			             }))
-			             .addWidget(new Button(actionsWindow, 10, 340, 280, 24, "move-troops", () {
+			             .addWidget(new CountButton(actionsWindow, 10, 340, 280, 24, "move-troops", 0, int.max, (int amt) {
 			               prevMapMode = mapMode;
-									   mapMode = MapMode.MOVE_TROOPS_1;		 
+									   mapMode = MapMode.MOVE_TROOPS_1;		
+										 availableProvinces = provinces.filter!(p => p !is null && p.owner is players[currentPlayer].country && p.effectiveTroops > 0).array;
 			             }))
 									 .addWidget(new ActionBox(actionsWindow));
 			viewWindow = new Window(50, 50, 100, 200, "view");
@@ -106,13 +107,7 @@ void keyEvent(KeyEvent e) {
 	}
 }
 
-bool canMoveTroopsFrom(Province p) {
-	return p !is null && p.owner is players[currentPlayer].country && p.effectiveTroops > 0;
-}
-
-bool canMoveTroopsTo(Province src, Province dest) {
-	return dest !is null && src.neighbors.canFind(dest);
-}
+Province[] availableProvinces;
 
 void mouseEvent(MouseEvent e) {
 	alias MET = MouseEventType;
@@ -149,13 +144,14 @@ void mouseEvent(MouseEvent e) {
 						}
 						break;
 					case MapMode.MOVE_TROOPS_1:
-						if(canMoveTroopsFrom(clickedProvince)) {
+						if(availableProvinces.canFind(clickedProvince)) {
 							selectedProvince = clickedProvince;
 							mapMode = MapMode.MOVE_TROOPS_2;
+							availableProvinces = provinces.filter!(p => p !is null && selectedProvince.neighbors.canFind(p)).array;
 						}
 						break;
 					case MapMode.MOVE_TROOPS_2:
-						if(canMoveTroopsTo(selectedProvince, clickedProvince)) {
+						if(availableProvinces.canFind(clickedProvince)) {
 							mapMode = prevMapMode;
 							players[currentPlayer].actions ~= new MovementAction(selectedProvince, clickedProvince, selectedProvince.troops);
 						}
