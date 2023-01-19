@@ -1,7 +1,7 @@
 /// Contains game logic
 module qonquest2.logic;
 
-import qonquest2.map;
+import qonquest2.map, qonquest2.app;
 
 /// Represents a player
 struct Player {
@@ -31,7 +31,7 @@ class MovementAction : Action {
 }
 
 /// Deploys troops to a province
-class DeployAction : Action {
+class DeploymentAction : Action {
 	Province province;
 	int amt;
 
@@ -42,4 +42,19 @@ class DeployAction : Action {
 	void commit() {
 		province.troops += amt;
 	}
+}
+
+/// Returns the amount of troops a province has after movement & deployment
+int effectiveTroops(Province p) {
+	int amt;
+	foreach(a; players[currentPlayer].actions) {
+		if(auto ma = cast(MovementAction)a) {
+			if(ma.source is p)
+				amt -= ma.amt;
+		} else if(auto da = cast(DeploymentAction)a) {
+			if(da.province is p)
+				amt += da.amt;
+		}
+	}
+	return amt;
 }

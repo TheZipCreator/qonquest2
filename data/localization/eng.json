@@ -10,5 +10,10 @@
 	"provinces": "Provinces",
 	"select-source-province": "Select Source Province",
 	"select-destination-province": "Select Destination Province",
-	"move-troops": "Move Troops"
+	"move-troops": "Move Troops",
+	"move": "Move",
+	"deploy": "Deploy",
+	"end-turn": "End Turn",
+	"or-press-escape": "or press escape to cancel.",
+	"deploy-troops": "Deploy troops. (%s remaining.)"
 }

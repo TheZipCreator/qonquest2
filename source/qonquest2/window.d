@@ -25,6 +25,7 @@ abstract class Widget {
 	@property int absY() { return y+parent.y; }
 }
 
+/// A simple checkbox
 class Checkbox : Widget {
 	enum SIZE        = 16;
 	enum COLOR       = Color3f(.75, .75, .75);
@@ -73,7 +74,7 @@ class Checkbox : Widget {
 	}
 }
 
-/// A single button
+/// A simple button
 class Button : Widget {
 	string label;
 	void delegate() onClick;
@@ -102,6 +103,28 @@ class Button : Widget {
 	}
 }
 
+/// A widget displaying all actions.
+class ActionBox : Widget {
+	this(Window parent) {
+		super(parent, 0, 0, "action-box");
+	}
+
+	enum X_SIZE    = 14;
+	enum SPACING   = 4;
+
+	override void draw(bool active) {
+		this.render(active);
+	}
+
+	override bool click(int x, int y, MouseButton b) {
+		if(b != MouseButton.left || x < parent.width-X_SIZE-SPACING || x > parent.width-SPACING || y < SPACING)
+			return false;
+		
+		return false;
+	}
+}
+
+/// The main window class
 class Window {
 	Widget[] widgets;    /// Widgets in this window
 	string title;        /// Title of this window

@@ -3,7 +3,7 @@ module qonquest2.app;
 
 import arsd.simpledisplay;
 
-import std.stdio;
+import std.stdio, std.algorithm;
 
 import qonquest2.display, qonquest2.map, qonquest2.window, qonquest2.localization, qonquest2.logic;
 import qonquest2.window : Window;
@@ -37,6 +37,7 @@ enum MapMode {
 }
 Province selectedProvince; /// Interim value for moving troops
 MapMode mapMode;           /// The current map mode
+MapMode prevMapMode;       /// The previous map mode
 
 void main(string[] args) {
 	win = new SimpleWindow(WIDTH, HEIGHT, "Qonquest 2", OpenGlOptions.yes, Resizability.automaticallyScaleIfPossible);
@@ -63,13 +64,15 @@ void changeState(State newState) {
 			windows = [mainMenuWindow];
 			break;
 		case State.GAME:
-			actionsWindow = new Window(300, 50, 150, 300, "actions");
-			actionsWindow.addWidget(new Button(actionsWindow, 10, 230, 130, 24, "end-turn", () {
+			actionsWindow = new Window(300, 50, 300, 400, "actions");
+			actionsWindow.addWidget(new Button(actionsWindow, 10, 370, 280, 24, "end-turn", () {
 			               // TODO
 			             }))
-			             .addWidget(new Button(actionsWindow, 10, 230, 100, 24, "move-troops", () {
-			               mapMode = MapMode.MOVE_TROOPS_1;		 
-			             }));
+			             .addWidget(new Button(actionsWindow, 10, 340, 280, 24, "move-troops", () {
+			               prevMapMode = mapMode;
+									   mapMode = MapMode.MOVE_TROOPS_1;		 
+			             }))
+									 .addWidget(new ActionBox(actionsWindow));
 			viewWindow = new Window(50, 50, 100, 200, "view");
 			viewWindow.addWidget(new Checkbox(viewWindow, 10, 10, "actions", &actionsWindow.visible))
 			          .addWidget(new Checkbox(viewWindow, 10, 200-Checkbox.SIZE-10, "provinces", () {
@@ -86,52 +89,79 @@ void redraw() {
 }
 
 void keyEvent(KeyEvent e) {
+	final switch(state) {
+		case State.MAIN_MENU:
+			break;
+		case State.GAME:
+			switch(mapMode) {
+				case MapMode.MOVE_TROOPS_1:
+				case MapMode.MOVE_TROOPS_2:
+					if(e.key == Key.Escape) {
+						mapMode = prevMapMode;
+					}
+					break;
+				default:
+					break;
+			}
+	}
+}
 
+bool canMoveTroopsFrom(Province p) {
+	return p !is null && p.owner is players[currentPlayer].country && p.effectiveTroops > 0;
+}
+
+bool canMoveTroopsTo(Province src, Province dest) {
+	return dest !is null && src.neighbors.canFind(dest);
 }
 
 void mouseEvent(MouseEvent e) {
 	alias MET = MouseEventType;
 	final switch(e.type) {
 		case MET.buttonPressed:
-			foreach_reverse(i, w; windows) {
-				if(!w.visible)
-					continue;
-				if(w.click(e.x-w.x, e.y-w.y, e.button))
-				 	break;
-				if(w.inTitleBar(e.x, e.y)) {
-					heldWindow = w;
-					heldWindowPos = Point(e.x-w.x, e.y-w.y);
-					windows = windows[0..i]~windows[i+1..$];
-					windows ~= w;
-					break;
-				}
-				if(state == State.GAME) {
-					Province clickedProvince;
-					outer:
-					foreach(p; provinces)
-						foreach(pix; p.pixels)
-							if(pix.x == e.x && pix.y == e.y) {
-								clickedProvince = p;
-								break outer;
-							}
-					switch(mapMode) {
-						case MapMode.SELECT_COUNTRY:
-							if(clickedProvince !is null) {
-								players ~= Player(clickedProvince.owner);
-								mapMode = MapMode.COUNTRY;
-							}
-							break;
-						case MapMode.MOVE_TROOPS_1:
-							if(clickedProvince !is null) {
-								selectedProvince = clickedProvince;
-								mapMode = MapMode.MOVE_TROOPS_2;
-							}
-							break;
-						case MapMode.MOVE_TROOPS_2:
-							break;
-						default:
-							break;
+			if([MapMode.PROVINCE, MapMode.COUNTRY].canFind(mapMode))
+				foreach_reverse(i, w; windows) {
+					if(!w.visible)
+						continue;
+					if(w.click(e.x-w.x, e.y-w.y, e.button))
+						break;
+					if(w.inTitleBar(e.x, e.y)) {
+						heldWindow = w;
+						heldWindowPos = Point(e.x-w.x, e.y-w.y);
+						windows = windows[0..i]~windows[i+1..$];
+						windows ~= w;
+						break;
 					}
+				}
+			if(state == State.GAME) {
+				Province clickedProvince;
+				outer:
+				foreach(p; provinces)
+					foreach(pix; p.pixels)
+						if(pix.x == e.x && pix.y == e.y) {
+							clickedProvince = p;
+							break outer;
+						}
+				switch(mapMode) {
+					case MapMode.SELECT_COUNTRY:
+						if(clickedProvince !is null) {
+							players ~= Player(clickedProvince.owner);
+							mapMode = MapMode.COUNTRY;
+						}
+						break;
+					case MapMode.MOVE_TROOPS_1:
+						if(canMoveTroopsFrom(clickedProvince)) {
+							selectedProvince = clickedProvince;
+							mapMode = MapMode.MOVE_TROOPS_2;
+						}
+						break;
+					case MapMode.MOVE_TROOPS_2:
+						if(canMoveTroopsTo(selectedProvince, clickedProvince)) {
+							mapMode = prevMapMode;
+							players[currentPlayer].actions ~= new MovementAction(selectedProvince, clickedProvince, selectedProvince.troops);
+						}
+						break;
+					default:
+						break;
 				}
 			}
 			break;

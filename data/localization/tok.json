@@ -7,8 +7,13 @@
 	"main-menu": "ilo kama",
 	"play": "o musi",
 	"select-country": "o anu e ma",
-	"provinces": "ma lili"
+	"provinces": "ma lili",
 	"select-source-province": "o anu e ma kama",
 	"select-destination-province": "o anu e ma tawa",
-	"move-troops": "o tawa e jan utala"
+	"move-troops": "o tawa e jan utala",
+	"move": "tawa",
+	"deploy": "sin",
+	"end-turn": "o pini e sike",
+	"or-press-escape": "anu, sina wile ala la, o luka e <ESC>",
+	"deploy-troops": "o pali e jan utala sin. (%s li lon.)"
 }

@@ -1,10 +1,10 @@
 /// Contains all code for displaying things to the screen
 module qonquest2.display;
 
-import std.file, std.conv;
+import std.file, std.conv, std.format, std.algorithm, std.range;
 import arsd.simpledisplay, arsd.png;
 
-import qonquest2.app, qonquest2.map, qonquest2.window, qonquest2.localization;
+import qonquest2.app, qonquest2.map, qonquest2.window, qonquest2.localization, qonquest2.logic;
 import qonquest2.window : Window;
 
 enum WIDTH  = 1200; /// width of the window
@@ -25,10 +25,21 @@ struct Color3f {
 	}
 	/// Create from arsd.color.Color
 	this(Color c) {
-		this.r = c.r/255f;
-		this.g = c.g/255f;
-		this.b = c.b/255f;
+		this.r = c.r/256f;
+		this.g = c.g/256f;
+		this.b = c.b/256f;
 	}
+	/// Create from a hex string
+	this(string hex) {
+		if(hex.length != 6)
+			return;
+		try {
+			r = (hex[0..2].to!int(16))/256f;
+			g = (hex[2..4].to!int(16))/256f;
+			b = (hex[4..6].to!int(16))/256f;
+		} catch(ConvException) {}
+	}
+
 	/// Runs glColor3f on this color
 	void draw() {
 		glColor3f(r, g, b);
@@ -40,6 +51,11 @@ struct Color3f {
 	/// Multiplies colors by a given amount
 	Color3f mul(float n) {
 		return Color3f(r*n, g*n, b*n);
+	}
+
+	/// Converts this color to a hex string
+	string toHexString() {
+		return format("%02x%02x%02x", cast(int)(r*256), cast(int)(g*256), cast(int)(b*256));
 	}
 }
 
@@ -117,10 +133,27 @@ static this() {
 
 /// Renders a string at the given position
 void text(string s, float x, float y, float scale = 1, Color3f col = Color3f(0, 0, 0)) {
-	foreach(dchar c; s) {
-		auto ch = characters[c];
-		ch.render(x, y, scale, col);
-		x += scale*ch.fontSpacing;
+	string colorCode;
+	bool getColorCode;
+	foreach(i, dchar c; s) {
+		switch(c) {
+			case '`':
+				getColorCode = true;
+				colorCode = "";
+				break;
+			default:
+				if(getColorCode) {
+					colorCode ~= c;
+					if(colorCode.length != 6)
+						break;
+					getColorCode = false;
+					col = Color3f(colorCode);
+					break;
+				}
+				auto ch = characters[c];
+				ch.render(x, y, scale, col);
+				x += scale*ch.fontSpacing;
+		}
 	}
 }
 /// Renders a string center-aligned
@@ -177,6 +210,33 @@ void render(Button b, bool active) {
 	rect(b.absX, b.absY, b.width, b.height);
 	textCenter(localization[b.label], b.absX+(b.width/2), b.absY);
 }
+/// Renders an action box
+void render(ActionBox b, bool active) {
+	auto parent = b.parent;
+	auto actions = players[currentPlayer].actions;
+	foreach(i, a; actions) {
+		string t = "unknown action";
+		if(auto ma = cast(MovementAction)a)
+			// Move: A -> B
+			t = localization["move"]~": `"~Color3f(ma.source.color).toHexString~localization[ma.source.name]
+				~"`FFFFFF -> `"~Color3f(ma.dest.color).toHexString~localization[ma.dest.name];
+		else if(auto da = cast(DeploymentAction)a)
+			// Deploy: n to A
+			t = localization["deploy"]~": "~da.amt.to!string~" to `"~Color3f(da.province.color).toHexString~localization[da.province.name];
+		text(t, parent.x+ActionBox.SPACING, parent.y+ActionBox.SPACING+i*CHAR_SIZE, 1, Color3f(1, 1, 1));
+		glColor3f(.5, 0, 0);
+		float x = parent.x+parent.width-ActionBox.SPACING-ActionBox.X_SIZE;
+		float y = parent.y+ActionBox.SPACING+i*CHAR_SIZE; 
+		rect(x, y, ActionBox.X_SIZE, ActionBox.X_SIZE);
+		glColor3f(1, 0, 0);
+		glBegin(GL_LINES);
+		glVertex2f(x+1, y+1);
+		glVertex2f(x+ActionBox.X_SIZE, y+ActionBox.X_SIZE);
+		glVertex2f(x+ActionBox.X_SIZE, y+1);
+		glVertex2f(x+1, y+ActionBox.X_SIZE);
+		glEnd();
+	}
+}
 
 /// Renders a province
 void render(Province p, float multiplier = 1) {
@@ -231,11 +291,8 @@ void redrawOpenGlScene() {
 	glBegin(GL_QUADS);
 	// draw game background
 	float bgMultiplier = 1;
-	{
-		import std.algorithm;
-		if([MapMode.SELECT_COUNTRY, MapMode.MOVE_TROOPS_1, MapMode.MOVE_TROOPS_2].canFind(mapMode))
-			bgMultiplier = 0.5;
-	}
+	if([MapMode.SELECT_COUNTRY, MapMode.MOVE_TROOPS_1, MapMode.MOVE_TROOPS_2].canFind(mapMode))
+		bgMultiplier = 0.5;
 	glColor3f(0, 0, 1*bgMultiplier);
 	glVertex2f(0, 0);
 	glVertex2f(WIDTH, 0);
@@ -275,13 +332,15 @@ void redrawOpenGlScene() {
 				break;
 			case MapMode.MOVE_TROOPS_1:
 				renderProvinces(0.5);
-				renderProvinces(1, players[currentPlayer].country.ownedProvinces);
+				renderProvinces(1, provinces.filter!(p => canMoveTroopsFrom(p)).array);
 				textCenter(localization["select-source-province"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
+				textCenter(localization["or-press-escape"], WIDTH/2, CHAR_SIZE*3, 1, Color3f(1, 1, 1));
 				break;
 			case MapMode.MOVE_TROOPS_2:
 				renderProvinces(0.5);
-				renderProvinces(1, selectedProvince.neighbors);
+				renderProvinces(1, provinces.filter!(p => canMoveTroopsTo(selectedProvince, p)).array);
 				textCenter(localization["select-destination-province"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
+				textCenter(localization["or-press-escape"], WIDTH/2, CHAR_SIZE*3, 1, Color3f(1, 1, 1));
 				break;
 			default:
 				break;
