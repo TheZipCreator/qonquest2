@@ -175,8 +175,8 @@ float textLen(string s, float scale = 1) {
 }
 
 /// Draws a rectangle at the given position
-void rect(float x, float y, float w, float h) {
-	glBegin(GL_QUADS);
+void rect(float x, float y, float w, float h, int mode = GL_QUADS) {
+	glBegin(mode);
 	glVertex2f(x,   y  );
 	glVertex2f(x+w, y  );
 	glVertex2f(x+w, y+h);
@@ -188,10 +188,13 @@ void rect(float x, float y, float w, float h) {
 void render(Window w) {
 	if(!w.visible)
 		return;
+	alias TITLE_HEIGHT = Window.TITLE_HEIGHT;
 	Window.TITLE_COLOR.draw;
-	rect(w.x, w.y-Window.TITLE_HEIGHT, w.width, Window.TITLE_HEIGHT);
+	rect(w.x, w.y-TITLE_HEIGHT, w.width, Window.TITLE_HEIGHT);
 	Window.BODY_COLOR.draw;
 	rect(w.x, w.y, w.width, w.height);
+	glColor3f(0, 0, 0);
+	rect(w.x, w.y-TITLE_HEIGHT, w.width, w.height+TITLE_HEIGHT, GL_LINE_LOOP);
 	text(localization[w.title], w.x+8, w.y-Window.TITLE_HEIGHT+4, 1, Window.TEXT_COLOR);
 	foreach(wi; w.widgets)
 		wi.draw(wi is w.activeWidget);
@@ -250,14 +253,6 @@ void render(CountButton b, bool active) {
 void render(Text t, bool active) {
 	auto parent = t.parent;
 	text(t.text, t.absX, t.absY, 1, Color3f(1, 1, 1));
-}
-
-/// Renders an X button
-void render(XButton b, bool active) {
-	auto parent = b.parent;
-	glColor3f(1, 0, 0);
-	alias SIZE = XButton.SIZE;
-	rect(parent.x+parent.width-SIZE, parent.y-Window.TITLE_HEIGHT, SIZE, SIZE);
 }
 
 /// Renders a province

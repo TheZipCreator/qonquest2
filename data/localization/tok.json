@@ -23,5 +23,6 @@
 	"attacker-rolls": "nanpa pi jan utala nanpa wan:",
 	"defender-rolls": "nanpa pi jan utala nanpa tu:",
 	"battle-result": "pini: %s li jo e ma.",
-	"round": "sike nanpa"
+	"round": "sike nanpa",
+	"close": "o weka"
 }

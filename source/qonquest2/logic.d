@@ -31,11 +31,10 @@ class MovementAction : Action {
 	}	
 	
 	void commit() {
-		if(source.owner is dest.owner || dest.troops == 0) {
+		if(source.owner is dest.owner) {
 			// just a movement between provinces
 			source.troops -= amt;
 			dest.troops   += amt;
-			dest.owner = source.owner;
 			return;
 		}
 		auto attacker = source.owner;
@@ -49,6 +48,26 @@ class MovementAction : Action {
 		}
 		int round = 1;
 		int totalAttackerLost = 0;
+		void won(Country c) {
+			battleLog ~= localization["battle-result"].format("`"~c.hexCode~localization[c.name]~"`FFFFFF")~"\n";
+			import std.stdio;
+			dest.owner = c;
+			if(!attacker.isPlayerCountry && !defender.isPlayerCountry)
+				return;
+			int height = 30+cast(int)(battleLog.splitLines.length)*CHAR_SIZE; 
+			auto win = new Window(100, 100, 500, height, localization["battle-of"]~" "~dest.hexCode~localization[dest.name]);
+			win .addWidget(new Text(win, 0, 0, battleLog))
+					.addWidget(new Button(win, 10, height-27, 480, 24, "close", () {
+						win.close = true;	 
+					}));
+			windows = win~windows;
+		}
+		if(dest.troops == 0) {
+			won(attacker);
+			source.troops -= amt;
+			dest.troops = amt;
+			return;
+		}
 		while(true) {
 			battleLog ~= "`FFFFFF"~localization["round"]~" "~round.to!string~"\n";
 			int[] attackerRolls = [roll, roll].sort!"a > b".release;
@@ -67,17 +86,6 @@ class MovementAction : Action {
 			totalAttackerLost += attackerLost;
 			dest.troops -= defenderLost;
 			round++;
-			void won(Country c) {
-				battleLog ~= localization["battle-result"].format("`"~c.hexCode~localization[c.name]~"`FFFFFF")~"\n";
-				dest.owner = c;
-				if(attacker is c || defender is c) {
-					import std.stdio;
-					auto win = new Window(100, 100, 500, cast(int)(battleLog.splitLines.length)*CHAR_SIZE, localization["battle-of"]~" "~source.hexCode~localization[source.name]);
-					win.addWidget(new Text(win, 0, 0, battleLog))
-					   .addWidget(new XButton(win));
-					windows ~= win;
-				}
-			}
 			if(totalAttackerLost > amt) {
 				won(defender);
 				source.troops -= amt;
@@ -167,13 +175,22 @@ Frontier[] frontiers(Country c) {
 /// Runs the AI for a country
 void runAI(Country c) {
 	Action[] actions;
-	auto frontiers = c.frontiers;
+	import std.array;
+	auto frontiers = c.frontiers.randomShuffle.array;
 	// deployment
 	while(c.deployableTroops > 0) {
 		actions ~= new DeploymentAction(frontiers.choice.src, 1);
 		c.deployableTroops--;
 	}
 	// movement
-
+	Province[] hasMovedFrom;
+	foreach(f; frontiers) {
+		if(hasMovedFrom.canFind(f.src))
+			continue;
+		if(f.dest.troops > f.src.troops)
+			continue;
+		actions ~= new MovementAction(f.src, f.dest, f.src.troops);
+		hasMovedFrom ~= f.src;
+	}
 	actions.commit();
 }

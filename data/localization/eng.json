@@ -24,5 +24,6 @@
 	"defender-rolls": "Defender Rolls",
 	"battle-result": "Result: %s won",
 	"round": "Round",
-	"losses": "Attacker lost %s, defender lost %s"
+	"losses": "Attacker lost %s, defender lost %s",
+	"close": "Close"
 }

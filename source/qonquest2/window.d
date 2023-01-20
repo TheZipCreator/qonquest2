@@ -197,25 +197,6 @@ class Text : Widget {
 	}
 }
 
-/// A button to close the window
-class XButton : Widget {
-	enum SIZE = cast(int)(Window.TITLE_HEIGHT*0.75);
-
-	this(Window parent) {
-		super(parent, 0, 0, "x");
-	}
-
-	override void draw(bool active) {
-		this.render(active);
-	}
-
-	override bool click(int x, int y, MouseButton b) {
-		if(y < 0 && y >= -Window.TITLE_HEIGHT && x >= parent.width-SIZE && x <= parent.width)
-			parent.close = true;
-		return false;
-	}
-}
-
 /// The main window class
 class Window {
 	Widget[] widgets;    /// Widgets in this window
@@ -237,6 +218,23 @@ class Window {
 	this(int x, int y, int width, int height, string title) {
 		this.x = x;
 		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.title = title;
+	}
+	
+	static int lastX = 100;
+	static int lastY = 100;
+
+	this(int width, int height, string title) {
+		this.x = lastX;
+		this.y = lastY;
+		lastX += width/2;
+		lastY += height/2;
+		if(lastX+width > WIDTH)
+			lastX = 100;
+		if(lastY+height > HEIGHT)
+			lastY = 100;
 		this.width = width;
 		this.height = height;
 		this.title = title;
