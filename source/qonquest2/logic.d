@@ -2,7 +2,8 @@
 module qonquest2.logic;
 
 import qonquest2.map, qonquest2.app, qonquest2.localization, qonquest2.window;
-import std.algorithm, std.format, std.conv;
+import qonquest2.display : CHAR_SIZE;
+import std.algorithm, std.format, std.conv, std.typecons, std.random, std.string;
 
 /// Represents a player
 class Player {
@@ -34,6 +35,7 @@ class MovementAction : Action {
 			// just a movement between provinces
 			source.troops -= amt;
 			dest.troops   += amt;
+			dest.owner = source.owner;
 			return;
 		}
 		auto attacker = source.owner;
@@ -61,16 +63,17 @@ class MovementAction : Action {
 			}
 			battleLog ~= localization["attacker-rolls"]~": "~format("%d, %d\n", attackerRolls[0], attackerRolls[1]);
 			battleLog ~= localization["defender-rolls"]~": "~format("%d, %d, %d\n", defenderRolls[0], defenderRolls[1], defenderRolls[2]);
-			battleLog ~= localization["losses"].format(attackerLost, defenderLost);
-			totalAttackerLost -= attackerLost;
+			battleLog ~= localization["losses"].format(attackerLost, defenderLost)~"\n";
+			totalAttackerLost += attackerLost;
 			dest.troops -= defenderLost;
 			round++;
 			void won(Country c) {
 				battleLog ~= localization["battle-result"].format("`"~c.hexCode~localization[c.name]~"`FFFFFF")~"\n";
 				dest.owner = c;
 				if(attacker is c || defender is c) {
-					auto win = new Window(100, 100, 200, 600, localization["battle-of"]~" "~source.hexCode~localization[source.name]);
-					win.addWidget(new Text(win, 0, 0, battleLog));
+					import std.stdio;
+					auto win = new Window(100, 100, 500, cast(int)(battleLog.splitLines.length)*CHAR_SIZE, localization["battle-of"]~" "~source.hexCode~localization[source.name]);
+					win.addWidget(new Text(win, 0, 0, battleLog))
 					   .addWidget(new XButton(win));
 					windows ~= win;
 				}
@@ -119,19 +122,58 @@ int effectiveTroops(Province p) {
 	return amt;
 }
 
+/// Tests if a country is the player country
+bool isPlayerCountry(Country c) {
+	foreach(p; players)
+		if(p.country is c)
+			return true;
+	return false;
+}
+
+/// Commits all actions in an array
+void commit(Action[] actions) {
+	foreach(a; actions)
+		a.commit;
+}
+
 /// Ends the turn and runs each action. If this is the last player, then it runs AI too
 void endTurn() {
-	foreach(a; player.actions) {
-		a.commit();
-	}
+	player.actions.commit();
 	player.actions = [];
 	if(currentPlayer+1 == players.length) {
-		// TODO: AI
 		foreach(c; countries) {
 			c.deployableTroops = cast(int)c.ownedProvinces.length*2;
+			if(!c.isPlayerCountry)
+				c.runAI();
 		}
 		currentPlayer = 0;
 		return;
 	}
 	currentPlayer++;
+}
+
+alias Frontier = Tuple!(Province, "src", Province, "dest");
+
+/// Gets the frontiers of a country (e.g. provinces that neighbor provinces not owned by the country)
+Frontier[] frontiers(Country c) {
+	Frontier[] frontiers;
+	foreach(src; c.ownedProvinces)
+		foreach(dest; src.neighbors)
+			if(src.owner !is dest.owner)
+				frontiers ~= Frontier(src, dest);
+	return frontiers;
+}
+
+/// Runs the AI for a country
+void runAI(Country c) {
+	Action[] actions;
+	auto frontiers = c.frontiers;
+	// deployment
+	while(c.deployableTroops > 0) {
+		actions ~= new DeploymentAction(frontiers.choice.src, 1);
+		c.deployableTroops--;
+	}
+	// movement
+
+	actions.commit();
 }

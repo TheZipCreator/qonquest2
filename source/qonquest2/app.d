@@ -140,7 +140,7 @@ void mouseEvent(MouseEvent e) {
 	final switch(e.type) {
 		case MET.buttonPressed:
 			if([MapMode.PROVINCE, MapMode.COUNTRY].canFind(mapMode))
-				foreach_reverse(i, w; windows) {
+				foreach(i, w; windows) {
 					if(!w.visible)
 						continue;
 					if(w.click(e.x-w.x, e.y-w.y, e.button))
@@ -148,8 +148,7 @@ void mouseEvent(MouseEvent e) {
 					if(w.inTitleBar(e.x, e.y)) {
 						heldWindow = w;
 						heldWindowPos = Point(e.x-w.x, e.y-w.y);
-						windows = windows[0..i]~windows[i+1..$];
-						windows ~= w;
+						windows = w~windows[0..i]~windows[i+1..$];
 						break;
 					}
 				}

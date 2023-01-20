@@ -252,6 +252,14 @@ void render(Text t, bool active) {
 	text(t.text, t.absX, t.absY, 1, Color3f(1, 1, 1));
 }
 
+/// Renders an X button
+void render(XButton b, bool active) {
+	auto parent = b.parent;
+	glColor3f(1, 0, 0);
+	alias SIZE = XButton.SIZE;
+	rect(parent.x+parent.width-SIZE, parent.y-Window.TITLE_HEIGHT, SIZE, SIZE);
+}
+
 /// Renders a province
 void render(Province p, float multiplier = 1) {
 	Color3f(p.color).mul(multiplier).draw;

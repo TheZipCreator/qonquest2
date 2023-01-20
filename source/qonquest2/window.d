@@ -206,7 +206,7 @@ class XButton : Widget {
 	}
 
 	override void draw(bool active) {
-		// this.render(active);
+		this.render(active);
 	}
 
 	override bool click(int x, int y, MouseButton b) {
