@@ -9,6 +9,7 @@ import std.algorithm, std.format, std.conv, std.typecons, std.random, std.string
 class Player {
 	Country country;  /// Country the player has chosen
 	Action[] actions; /// Actions the player has done
+	bool hasCapturedProvince; /// Whether the player has captured a province yet
 
 	this(Country country) {
 		this.country = country;
@@ -43,12 +44,17 @@ class MovementAction : Action {
 		string battleLog; // log to show if the player owns one of the provinces
 		battleLog ~= attacker.hexCode~localization[attacker.name]~"`FFFFFF"~localization["vs"]~defender.hexCode~localization[defender.name]~"\n";
 		import std.random : uniform;
-		int roll() {
+		int roll(Country c) {
+			if(auto p = c.getPlayer())
+				if(!p.hasCapturedProvince)
+					return uniform(2, 6)+1;
 			return uniform(0, 6)+1;
 		}
 		int round = 1;
 		int totalAttackerLost = 0;
 		void won(Country c) {
+			if(auto p = c.getPlayer())
+				p.hasCapturedProvince = true;
 			battleLog ~= localization["battle-result"].format("`"~c.hexCode~localization[c.name]~"`FFFFFF")~"\n";
 			import std.stdio;
 			dest.owner = c;
@@ -70,8 +76,8 @@ class MovementAction : Action {
 		}
 		while(true) {
 			battleLog ~= "`FFFFFF"~localization["round"]~" "~round.to!string~"\n";
-			int[] attackerRolls = [roll, roll].sort!"a > b".release;
-			int[] defenderRolls = [roll, roll, roll].sort!"a > b".release;
+			int[] attackerRolls = [roll(attacker), roll(attacker)].sort!"a > b".release;
+			int[] defenderRolls = [roll(defender), roll(defender), roll(defender)].sort!"a > b".release;
 			int attackerLost;
 			int defenderLost;
 			foreach(i; 0..2) {
@@ -86,7 +92,7 @@ class MovementAction : Action {
 			totalAttackerLost += attackerLost;
 			dest.troops -= defenderLost;
 			round++;
-			if(totalAttackerLost > amt) {
+			if(totalAttackerLost >= amt) {
 				won(defender);
 				source.troops -= amt;
 				break;
@@ -130,12 +136,17 @@ int effectiveTroops(Province p) {
 	return amt;
 }
 
-/// Tests if a country is the player country
-bool isPlayerCountry(Country c) {
+/// Returns the player associated with a given country (null if none)
+Player getPlayer(Country c) {
 	foreach(p; players)
 		if(p.country is c)
-			return true;
-	return false;
+			return p;
+	return null;
+}
+
+/// Tests if a country is the player country
+bool isPlayerCountry(Country c) {
+	return c.getPlayer() !is null;
 }
 
 /// Commits all actions in an array

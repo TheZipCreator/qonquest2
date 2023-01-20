@@ -166,6 +166,9 @@ void mouseEvent(MouseEvent e) {
 						if(clickedProvince !is null) {
 							players ~= new Player(clickedProvince.owner);
 							mapMode = MapMode.COUNTRY;
+							foreach(p; provinces)
+								if(!p.owner.isPlayerCountry)
+									p.troops = 2;
 						}
 						break;
 					case MapMode.MOVE_TROOPS_1:
