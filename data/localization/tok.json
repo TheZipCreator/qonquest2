@@ -19,5 +19,9 @@
 	"select-province-to-deploy": "jan utala sin la, o anu e ma",
 	"undo-action": "o weka e pali",
 	"vs": " li utala e ",
-	"battle-of": "utala pi "
+	"battle-of": "utala pi ",
+	"attacker-rolls": "nanpa pi jan utala nanpa wan:",
+	"defender-rolls": "nanpa pi jan utala nanpa tu:",
+	"battle-result": "pini: %s li jo e ma.",
+	"round": "sike nanpa"
 }

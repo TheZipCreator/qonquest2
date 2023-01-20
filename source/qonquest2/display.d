@@ -135,7 +135,7 @@ static this() {
 void text(string s, float x, float y, float scale = 1, Color3f col = Color3f(0, 0, 0)) {
 	string colorCode;
 	bool getColorCode;
-	int orgx = x;
+	float orgx = x;
 	foreach(i, dchar c; s) {
 		switch(c) {
 			case '`':
@@ -208,6 +208,7 @@ void render(Checkbox c, bool active) {
 	}
 	text(localization[c.label], c.absX+Checkbox.SIZE, c.absY, 1, Color3f(1, 1, 1));
 }
+
 /// Renders a button
 void render(Button b, bool active) {
 	auto parent = b.parent;
@@ -215,6 +216,7 @@ void render(Button b, bool active) {
 	rect(b.absX, b.absY, b.width, b.height);
 	textCenter(localization[b.label], b.absX+(b.width/2), b.absY);
 }
+
 /// Renders an action box
 void render(ActionBox b, bool active) {
 	auto parent = b.parent;
@@ -231,6 +233,7 @@ void render(ActionBox b, bool active) {
 		text(t, parent.x+ActionBox.SPACING, parent.y+ActionBox.SPACING+i*CHAR_SIZE, 1, Color3f(1, 1, 1));
 	}
 }
+
 /// Renders a count button
 void render(CountButton b, bool active) {
 	auto parent = b.parent;
@@ -241,6 +244,12 @@ void render(CountButton b, bool active) {
 	CountButton.COUNT_COLOR.draw;
 	rect(b.absX, b.absY, b.width*COUNT_SIZE, b.height);
 	textCenter(b.count.to!string~(b.max == int.max ? "" : "/"~b.max.to!string), b.absX+(b.width*COUNT_SIZE)/2, b.absY, 1, Color3f(1, 1, 1));
+}
+
+/// Renders a text widget
+void render(Text t, bool active) {
+	auto parent = t.parent;
+	text(t.text, t.absX, t.absY, 1, Color3f(1, 1, 1));
 }
 
 /// Renders a province
@@ -324,8 +333,11 @@ void redrawOpenGlScene() {
 			p.renderText();
 	}
 	void renderWindows() {
-		foreach(w; windows)
+		foreach_reverse(i, w; windows) {
 			w.render();
+			if(w.close)
+				windows = windows[0..i]~windows[i+1..$];
+		}
 	}
 	if(state == State.GAME) {
 		switch(mapMode) {

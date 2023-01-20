@@ -183,6 +183,39 @@ class ActionBox : Widget {
 	}
 }
 
+/// Static text
+class Text : Widget {
+	string text;
+
+	this(Window parent, int x, int y, string text) {
+		super(parent, x, y, text);
+		this.text = text;
+	}
+
+	override void draw(bool active) {
+		this.render(active);
+	}
+}
+
+/// A button to close the window
+class XButton : Widget {
+	enum SIZE = cast(int)(Window.TITLE_HEIGHT*0.75);
+
+	this(Window parent) {
+		super(parent, 0, 0, "x");
+	}
+
+	override void draw(bool active) {
+		// this.render(active);
+	}
+
+	override bool click(int x, int y, MouseButton b) {
+		if(y < 0 && y >= -Window.TITLE_HEIGHT && x >= parent.width-SIZE && x <= parent.width)
+			parent.close = true;
+		return false;
+	}
+}
+
 /// The main window class
 class Window {
 	Widget[] widgets;    /// Widgets in this window
@@ -193,6 +226,7 @@ class Window {
 	int y;               /// Y position of this window
 	Widget activeWidget; /// Currently active widget
 	bool visible = true; /// Whether this window is visible or not
+	bool close = false;  /// Tells the program to close this window
 
 	enum TEXT_COLOR  = Color3f(1,   1,   1);   /// Color of window text
 	enum TITLE_COLOR = Color3f(.25, .25, .25); /// Color of window title bar

@@ -19,5 +19,10 @@
 	"select-province-to-deploy": "Select province to deploy troops to",
 	"undo-action": "Undo Action",
 	"vs": " vs. ",
-	"battle-of": "Battle of"
+	"battle-of": "Battle of",
+	"attacker-rolls": "Attacker Rolls",
+	"defender-rolls": "Defender Rolls",
+	"battle-result": "Result: %s won",
+	"round": "Round",
+	"losses": "Attacker lost %s, defender lost %s"
 }
