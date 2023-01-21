@@ -307,6 +307,8 @@ void renderText(Province p) {
 	textCenter(troopsText, p.center.x, p.center.y+CHAR_SIZE, 1, Color3f(p.color).inverse.mul(.5));
 }
 
+bool hideStraits; /// Whether or not to hide straits
+
 /// Redraws the opengl scene
 void redrawOpenGlScene() {
 	glLoadIdentity();
@@ -314,7 +316,7 @@ void redrawOpenGlScene() {
 	glBegin(GL_QUADS);
 	// draw game background
 	float bgMultiplier = 1;
-	if([MapMode.SELECT_COUNTRY, MapMode.MOVE_TROOPS_1, MapMode.MOVE_TROOPS_2, MapMode.DEPLOY_TROOPS].canFind(mapMode))
+	if(state == State.GAME && [MapMode.SELECT_COUNTRY, MapMode.MOVE_TROOPS_1, MapMode.MOVE_TROOPS_2, MapMode.DEPLOY_TROOPS, MapMode.WON, MapMode.LOST].canFind(mapMode))
 		bgMultiplier = 0.5;
 	glColor3f(0, 0, 1*bgMultiplier);
 	glVertex2f(0, 0);
@@ -342,6 +344,17 @@ void redrawOpenGlScene() {
 				windows = windows[0..i]~windows[i+1..$];
 		}
 	}
+	void renderStraits() {
+		glBegin(GL_LINES);
+		glColor3f(1, 0, 1);
+		foreach(strait; straits) {
+			auto a = strait[0];
+			auto b = strait[1];
+			glVertex2f(a.x, a.y);
+			glVertex2f(b.x, b.y);
+		}
+		glEnd();
+	}
 	if(state == State.GAME) {
 		switch(mapMode) {
 			case MapMode.SELECT_COUNTRY:
@@ -349,30 +362,47 @@ void redrawOpenGlScene() {
 				textCenter(localization["select-country"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
 				break;
 			case MapMode.COUNTRY:
+				if(!hideStraits)
+					renderStraits();
 				renderCountries();
 				renderWindows();
 				break;
 			case MapMode.PROVINCE:
+				if(!hideStraits)
+					renderStraits();
 				renderProvinces();
 				renderWindows();
 				break;
 			case MapMode.MOVE_TROOPS_1:
+				renderStraits();
 				renderProvinces(0.5);
 				renderProvinces(1, availableProvinces);
 				textCenter(localization["select-source-province"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
 				textCenter(localization["or-press-escape"], WIDTH/2, CHAR_SIZE*3, 1, Color3f(1, 1, 1));
 				break;
 			case MapMode.MOVE_TROOPS_2:
+				renderStraits();
 				renderProvinces(0.5);
 				renderProvinces(1, availableProvinces);
 				textCenter(localization["select-destination-province"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
 				textCenter(localization["or-press-escape"], WIDTH/2, CHAR_SIZE*3, 1, Color3f(1, 1, 1));
 				break;
 			case MapMode.DEPLOY_TROOPS:
+				renderStraits();
 				renderProvinces(0.5);
 				renderProvinces(1, availableProvinces);
 				textCenter(localization["select-province-to-deploy"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
 				textCenter(localization["or-press-escape"], WIDTH/2, CHAR_SIZE*3, 1, Color3f(1, 1, 1));
+				break;
+			case MapMode.WON:
+				renderCountries();
+				textCenter(localization["won"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
+				textCenter(localization["in-turns"].format(currentTurn), WIDTH/2, CHAR_SIZE*3, 1, Color3f(1, 1, 1));
+				break;
+			case MapMode.LOST:
+				renderCountries();
+				textCenter(localization["lost"], WIDTH/2, 0, 3, Color3f(1, 1, 1));
+				textCenter(localization["in-turns"].format(currentTurn), WIDTH/2, CHAR_SIZE*3, 1, Color3f(1, 1, 1));	
 				break;
 			default:
 				break;

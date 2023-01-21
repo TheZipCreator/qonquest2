@@ -29,6 +29,52 @@
 			"owner": "italy",
 			"color": [0, 255, 71],
 			"center": [541, 522]
+		},
+		{
+			"name": "london",
+			"owner": "britain",
+			"color": [255, 0, 0],
+			"center": [362, 338],
+			"neighbors": [2]
+		},
+		{
+			"name": "berlin",
+			"owner": "prussia",
+			"color": [49, 49, 49],
+			"center": [570, 328]
+		},
+		{
+			"name": "vienna",
+			"owner": "austria",
+			"color": [134, 134, 134],
+			"center": [562, 418]
+		},
+		{
+			"name": "copenhagen",
+			"owner": "denmark",
+			"color": [118, 0, 0],
+			"center": [534, 263]
+		},
+		{
+			"name": "dublin",
+			"owner": "ireland",
+			"color": [68, 255, 0],
+			"center": [273, 307],
+			"neighbors": [5]
+		},
+		{
+			"name": "reykjavik",
+			"owner": "iceland",
+			"color": [0, 218, 255],
+			"center": [139, 78],
+			"neighbors": [5]
+		},
+		{
+			"name": "rabat",
+			"owner": "morocco",
+			"color": [243, 78, 0],
+			"center": [300, 666],
+			"neighbors": [0]
 		}
 	],
 	"countries": [
@@ -38,7 +84,7 @@
 		},
 		{
 			"name": "portugal",
-			"color": [0, 128, 8]
+			"color": [0, 171, 245]
 		},
 		{
 			"name": "france",
@@ -50,7 +96,35 @@
 		},
 		{
 			"name": "italy",
-			"color": [0, 255, 71]
+			"color": [0, 128, 0]
+		},
+		{
+			"name": "britain",
+			"color": [255, 0, 0]
+		},
+		{
+			"name": "prussia",
+			"color": [49, 49, 49]
+		},
+		{
+			"name": "austria",
+			"color": [200, 200, 200]
+		},
+		{
+			"name": "denmark",
+			"color": [118, 0, 0]
+		},
+		{
+			"name": "ireland",
+			"color": [68, 255, 0]
+		},
+		{
+			"name": "iceland",
+			"color": [0, 218, 255]
+		},
+		{
+			"name": "morocco",
+			"color": [243, 78, 0]
 		}
 	]
 }

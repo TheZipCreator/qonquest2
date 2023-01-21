@@ -1,7 +1,7 @@
 /// Contains code handling the map
 module qonquest2.map;
 
-import std.json, std.file;
+import std.json, std.file, std.typecons;
 import qonquest2.display : Color3f;
 
 import arsd.png;
@@ -78,8 +78,12 @@ class MapLoadException : Exception {
 	}
 }
 
+Tuple!(Point, Point)[] straits;
+
 /// Loads the map (including countries & provinces)
 void loadMap() {
+	countries.clear();
+	provinces = [];
 	auto mapJSON  = parseJSON(readText("data/map.json"));
 	// load countries
 	foreach(country; mapJSON["countries"].array) {
@@ -99,6 +103,13 @@ void loadMap() {
 		if(owner !in countries)
 			throw new MapLoadException("Unknown country "~owner~".");
 		auto prov = new Province(province["name"].str, col, province["center"].toPoint, countries[owner]);
+		if("neighbors" in province)
+			foreach(i_; province["neighbors"].array) {
+				size_t i = i_.integer;
+				prov.neighbors ~= provinces[i];
+				provinces[i].neighbors ~= prov;
+				straits ~= tuple(prov.center, provinces[i].center);
+			}
 		provinces ~= prov;
 		provinceColors[col] = prov;
 	}

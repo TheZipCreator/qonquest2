@@ -4,12 +4,26 @@
 	"portugal": "Portugal",
 	"netherlands": "Netherlands",
 	"italy": "Italy",
+	"britain": "Britain",
+	"berlin": "Berlin",
+	"vienna": "Vienna",
+	"copenhagen": "Copenhagen",
+	"dublin": "Dublin",
+	"reykjavik": "Reykjavik",
+	"rabat": "Rabat",
 
 	"madrid": "Madrid",
 	"paris": "Paris",
 	"lisbon": "Lisbon",
 	"amsterdam": "Amsterdam",
 	"rome": "Rome",
+	"london": "London",
+	"prussia": "Prussia",
+	"austria": "Austria",
+	"denmark": "Denmark",
+	"ireland": "Ireland",
+	"iceland": "Iceland",
+	"morocco": "Morocco",
 
 	"view": "View",
 	"actions": "Actions",
@@ -34,5 +48,9 @@
 	"battle-result": "Result: %s won",
 	"round": "Round",
 	"losses": "Attacker lost %s, defender lost %s",
-	"close": "Close"
+	"close": "Close",
+	"won": "You have won!",
+	"lost": "You have lost",
+	"in-turns": "in %s turns. Press any key to return to the main menu.",
+	"hide-straits": "Hide Straits"
 }

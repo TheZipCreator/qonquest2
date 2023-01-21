@@ -1,7 +1,19 @@
 {
+
 	"spain": "ma Epanja",
 	"france": "ma Kanse",
 	"portugal": "ma Potuke",
+	"netherlands": "ma Netelan",
+	"italy": "ma Italija",
+	"britain": "ma Juke",
+
+	"madrid": "ma Mati",
+	"paris": "ma Peli",
+	"lisbon": "ma Lipon",
+	"amsterdam": "ma Ameten",
+	"rome": "ma Loma",
+	"london": "ma Lonton",
+
 	"view": "lukin",
 	"actions": "pali",
 	"main-menu": "ilo kama",
@@ -24,5 +36,9 @@
 	"defender-rolls": "nanpa pi jan utala nanpa tu:",
 	"battle-result": "pini: %s li jo e ma.",
 	"round": "sike nanpa",
-	"close": "o weka"
+	"close": "o weka",
+	"won": "sina jo e ale!",
+	"lost": "sina jo e ala",
+	"in-turns": "sina kepeken e sike %s",
+	"hide-straits": "o weka e palisa"
 }

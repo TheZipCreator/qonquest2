@@ -40,7 +40,9 @@ enum MapMode {
 	// normal map modes
 	PROVINCE, COUNTRY, 
 	// selection map modes
-	SELECT_COUNTRY, MOVE_TROOPS_1, MOVE_TROOPS_2, DEPLOY_TROOPS
+	SELECT_COUNTRY, MOVE_TROOPS_1, MOVE_TROOPS_2, DEPLOY_TROOPS,
+	// other map modes
+	WON, LOST
 }
 Province selectedProvince; /// Interim value for moving troops
 MapMode mapMode;           /// The current map mode
@@ -95,9 +97,10 @@ void changeState(State newState) {
 									  }))
 										
 									  .addWidget(new ActionBox(actionsWindow));
-			viewWindow = new Window(50, 50, 100, 200, "view");
+			viewWindow = new Window(50, 200, 150, 200, "view");
 			viewWindow.addWidget(new Checkbox(viewWindow, 10, 10, "actions", &actionsWindow.visible))
-			          .addWidget(new Checkbox(viewWindow, 10, 200-Checkbox.SIZE-10, "provinces", () {
+			          .addWidget(new Checkbox(viewWindow, 10, 200-(Checkbox.SIZE+10)*2, "hide-straits", &hideStraits))
+			          .addWidget(new Checkbox(viewWindow, 10, 200-(Checkbox.SIZE+10), "provinces", () {
 			            mapMode = mapMode.PROVINCE;
 			          }, () {
 			            mapMode = mapMode.COUNTRY;
@@ -126,6 +129,11 @@ void keyEvent(KeyEvent e) {
 						mapMode = prevMapMode;
 					}
 					break;
+				case MapMode.WON:
+				case MapMode.LOST:
+					loadMap();
+					changeState(State.MAIN_MENU);
+					break;
 				default:
 					break;
 			}
@@ -139,7 +147,7 @@ void mouseEvent(MouseEvent e) {
 	alias MET = MouseEventType;
 	final switch(e.type) {
 		case MET.buttonPressed:
-			if([MapMode.PROVINCE, MapMode.COUNTRY].canFind(mapMode))
+			if(state != State.GAME || [MapMode.PROVINCE, MapMode.COUNTRY].canFind(mapMode))
 				foreach(i, w; windows) {
 					if(!w.visible)
 						continue;
@@ -169,6 +177,8 @@ void mouseEvent(MouseEvent e) {
 							foreach(p; provinces)
 								if(!p.owner.isPlayerCountry)
 									p.troops = 2;
+								else
+									p.troops = 0;
 						}
 						break;
 					case MapMode.MOVE_TROOPS_1:
@@ -208,12 +218,8 @@ void mouseEvent(MouseEvent e) {
 			break;
 		case MET.motion:
 			if(heldWindow !is null) {
-				auto newX = e.x-heldWindowPos.x;
-				auto newY = e.y-heldWindowPos.y;
-				if(newX >= 0 && newY >= 0 && newX < WIDTH-heldWindow.width && newY < HEIGHT-heldWindow.height) {
-					heldWindow.x = newX;
-					heldWindow.y = newY;
-				}
+				heldWindow.x = e.x-heldWindowPos.x;
+				heldWindow.y =  e.y-heldWindowPos.y;
 			}
 			break;
 	}
