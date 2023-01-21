@@ -1,0 +1,3 @@
+#!/bin/bash
+dub build --arch x86_64-windows-msvc
+make-release windows qonquest2.exe

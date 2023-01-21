@@ -1,0 +1,16 @@
+#!/bin/bash
+if [ -z $1 ]; then
+	echo 'dir is not set!'
+	exit
+fi
+if [ ! -d ./release ]; then
+	mkdir ./release
+fi
+if [ ! -d ./release/qonquest2-$1 ]; then
+	mkdir ./release/qonquest2-$1
+fi
+cp -r ./data ./$2 ./release/qonquest2-$1
+if [ -e ./release/qonquest2-$1.7z ]; then
+	rm ./release/qonquest2-$1.7z
+fi
+7z a ./release/qonquest-$1.7z ./release/qonquest2-$1/*
