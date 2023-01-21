@@ -2,6 +2,7 @@
 docs.json
 __dummy.html
 docs/
+release/*
 /qonquest2
 qonquest2.so
 qonquest2.dylib
