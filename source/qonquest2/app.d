@@ -84,7 +84,7 @@ void changeState(State newState) {
 			              .addWidget(new CountButton(actionsWindow, 10, 500-30*3, 280, 24, "move-troops", 1, int.max, (int amt) {
 			                prevMapMode = mapMode;
 									    mapMode = MapMode.MOVE_TROOPS_1;		
-										  availableProvinces = provinces.filter!(p => p !is null && p.owner is player.country && p.effectiveTroops >= amt).array;
+										  availableProvinces = provinces.filter!(p => p !is null && p.owner == player.country && p.effectiveTroops >= amt).array;
 			             	  troopAmt = amt;
 									  }))
 									  .addWidget(new CountButton(actionsWindow, 10, 500-30*4, 280, 24, "deploy-troops", 0, int.max, (int amt) {

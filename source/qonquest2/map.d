@@ -29,6 +29,10 @@ class Country {
 	string hexCode() {
 		return "`"~Color3f(color).toHexString;
 	}
+
+	void opBinary(string s = "is")(Country b) {
+		return name == b.name;
+	}
 }
 
 /// Represents a province
@@ -54,6 +58,10 @@ class Province {
 
 	string hexCode() {
 		return "`"~Color3f(color).toHexString;
+	}
+
+	void opBinary(string s = "is")(Province b) {
+		return name == b.name;
 	}
 }
 

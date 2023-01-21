@@ -155,7 +155,7 @@ void commit(Action[] actions) {
 		a.commit;
 }
 
-int currentTurn = 1; /// The current turn
+int currentTurn = 0; /// The current turn
 
 /// Ends the turn and runs each action. If this is the last player, then it runs AI too
 void endTurn() {
@@ -168,13 +168,13 @@ void endTurn() {
 				c.runAI();
 		}
 		currentPlayer = 0;
+		currentTurn++;
 	} else
 		currentPlayer++;
 	if(player.country.ownedProvinces.length == 0)
 		mapMode = MapMode.LOST;
 	else if(player.country.ownedProvinces.length == provinces.length)
 		mapMode = MapMode.WON;
-	currentTurn++;
 }
 
 alias Frontier = Tuple!(Province, "src", Province, "dest");
