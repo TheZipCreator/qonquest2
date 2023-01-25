@@ -1,7 +1,7 @@
 /// Contains code handling windows and widgets
 module qonquest2.window;
 
-import qonquest2.display;
+import qonquest2.display, qonquest2.app;
 import arsd.simpledisplay;
 
 abstract class Widget {
@@ -141,13 +141,16 @@ class CountButton : Widget {
 	}
 
 	override bool click(int x, int y, MouseButton b) {
+		int amt() {
+			return shiftPressed ? 5 : 1;
+		}
 		scope(exit)
 			checkBounds();
 		if(b == MouseButton.left) {
 			if(x < 0 || y < 0 || x > width || y > height)
 				return false;
 			if(x < width*COUNT_SIZE) {
-				count++;
+				count += amt();
 				return true;
 			}
 			onClick(count);
@@ -155,7 +158,7 @@ class CountButton : Widget {
 		} else if(b == MouseButton.right) {
 			if(x < 0 ||  y < 0 || x > width*COUNT_SIZE || y > height)
 				return false;
-			count--;
+			count -= amt();
 			return true;
 		}
 		return false;

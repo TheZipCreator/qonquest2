@@ -1,130 +1,105 @@
 {
 	"provinces": [
 		{
-			"name": "madrid",
-			"owner": "spain",
-			"color": [255, 233, 0],
-			"center": [309, 560]
-		},
-		{
-			"name": "lisbon",
+			"name": "portugal",
 			"owner": "portugal",
-			"color": [0, 255, 8],
-			"center": [236, 570]
+			"color": [8, 70, 16],
+			"center": [191, 609],
+			"gen-country": true
 		},
 		{
-			"name": "paris",
-			"owner": "france",
-			"color": [15, 0, 255],
-			"center": [411, 409]
+			"name": "galicia",
+			"owner": "galicia",
+			"color": [67, 150, 155],
+			"center": [224, 527],
+			"gen-country": true
 		},
-		{
-			"name": "amsterdam",
-			"owner": "netherlands",
-			"color": [255, 149, 0],
-			"center": [442, 332]
-		},
-		{
-			"name": "rome",
-			"owner": "italy",
-			"color": [0, 255, 71],
-			"center": [541, 522]
-		},
-		{
-			"name": "london",
-			"owner": "britain",
-			"color": [255, 0, 0],
-			"center": [362, 338],
-			"neighbors": [2]
-		},
-		{
-			"name": "berlin",
-			"owner": "prussia",
-			"color": [49, 49, 49],
-			"center": [570, 328]
-		},
-		{
-			"name": "vienna",
-			"owner": "austria",
-			"color": [134, 134, 134],
-			"center": [562, 418]
-		},
-		{
-			"name": "copenhagen",
-			"owner": "denmark",
-			"color": [118, 0, 0],
-			"center": [534, 263]
-		},
-		{
-			"name": "dublin",
-			"owner": "ireland",
-			"color": [68, 255, 0],
-			"center": [273, 307],
-			"neighbors": [5]
-		},
-		{
-			"name": "reykjavik",
-			"owner": "iceland",
-			"color": [0, 218, 255],
-			"center": [139, 78],
-			"neighbors": [5]
-		},
-		{
-			"name": "rabat",
-			"owner": "morocco",
-			"color": [243, 78, 0],
-			"center": [300, 666],
-			"neighbors": [0]
-		}
-	],
-	"countries": [
 		{
 			"name": "spain",
-			"color": [255, 233, 0]
+			"owner": "spain",
+			"color": [255, 216, 0],
+			"center": [284, 585],
+			"gen-country": true
 		},
 		{
-			"name": "portugal",
-			"color": [0, 171, 245]
+			"name": "catalonia",
+			"owner": "catalonia",
+			"color": [67, 150, 0],
+			"center": [379, 546],
+			"gen-country": true
 		},
 		{
-			"name": "france",
-			"color": [15, 0, 255]
+			"name": "occitania",
+			"owner": "occitania",
+			"color": [182, 84, 158],
+			"center": [432, 503],
+			"gen-country": true
 		},
 		{
-			"name": "netherlands",
-			"color": [255, 149, 0]
+			"name": "metropolitan-france",
+			"owner": "metropolitan-france",
+			"color": [64, 97, 158],
+			"center": [320, 418],
+			"gen-country": true
 		},
 		{
-			"name": "italy",
-			"color": [0, 128, 0]
+			"name": "burgundy",
+			"owner": "burgundy",
+			"color": [12, 64, 155],
+			"center": [454, 413],
+			"gen-country": true
 		},
 		{
-			"name": "britain",
-			"color": [255, 0, 0]
+			"name": "england",
+			"owner": "england",
+			"color": [236, 28, 0],
+			"center": [356, 336],
+			"gen-country": true,
+			"neighbors": ["metropolitan-france"]
 		},
 		{
-			"name": "prussia",
-			"color": [49, 49, 49]
+			"name": "scotland",
+			"owner": "scotland",
+			"color": [217, 167, 0],
+			"center": [308, 251],
+			"gen-country": true
 		},
 		{
-			"name": "austria",
-			"color": [200, 200, 200]
-		},
-		{
-			"name": "denmark",
-			"color": [118, 0, 0]
+			"name": "northern-ireland",
+			"owner": "northern-ireland",
+			"color": [51, 62, 0],
+			"center": [249, 237],
+			"gen-country": true,
+			"neighbors": ["scotland"]
 		},
 		{
 			"name": "ireland",
-			"color": [68, 255, 0]
+			"owner": "ireland",
+			"color": [55, 97, 24],
+			"center": [260, 309],
+			"gen-country": true
 		},
 		{
-			"name": "iceland",
-			"color": [0, 218, 255]
+			"name": "north-italy",
+			"owner": "north-italy",
+			"color": [255, 255, 101],
+			"center": [548, 468],
+			"gen-country": true
 		},
 		{
-			"name": "morocco",
-			"color": [243, 78, 0]
-		}
-	]
+			"name": "central-italy",
+			"owner": "central-italy",
+			"color": [236, 151, 0],
+			"center": [561, 552],
+			"gen-country": true
+		},
+		{
+			"name": "south-italy",
+			"owner": "south-italy",
+			"color": [170, 151, 0],
+			"center": [608, 577],
+			"gen-country": true
+		},
+	],
+	"countries": []
 }

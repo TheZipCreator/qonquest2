@@ -42,7 +42,7 @@ class MovementAction : Action {
 		auto defender = dest.owner;
 		// battle!
 		string battleLog; // log to show if the player owns one of the provinces
-		battleLog ~= attacker.hexCode~localization[attacker.name]~"`FFFFFF"~localization["vs"]~defender.hexCode~localization[defender.name]~"\n";
+		battleLog ~= "`o"~attacker.hexCode~localization[attacker.name]~"`o`FFFFFF"~localization["vs"]~"`o"~defender.hexCode~localization[defender.name]~"`o`FFFFFF\n";
 		import std.random : uniform;
 		int roll(Country c) {
 			if(auto p = c.getPlayer())
@@ -55,15 +55,14 @@ class MovementAction : Action {
 		void won(Country c) {
 			if(auto p = c.getPlayer())
 				p.hasCapturedProvince = true;
-			battleLog ~= localization["battle-result"].format("`"~c.hexCode~localization[c.name]~"`FFFFFF")~"\n";
-			import std.stdio;
+			battleLog ~= localization["battle-result"].format("`o"~c.hexCode~localization[c.name]~"`o`FFFFFF")~"\n";
 			dest.owner = c;
 			if(!attacker.isPlayerCountry && !defender.isPlayerCountry)
 				return;
-			int height = 30+cast(int)(battleLog.splitLines.length)*CHAR_SIZE; 
-			auto win = new Window(500, height, localization["battle-of"]~" "~dest.hexCode~localization[dest.name]);
-			win .addWidget(new Text(win, 0, 0, battleLog))
-					.addWidget(new Button(win, 10, height-27, 480, 24, "close", () {
+			int height = 40+cast(int)(battleLog.splitLines.length)*CHAR_SIZE; 
+			auto win = new Window(500, height, localization["battle-of"]~" `o"~dest.hexCode~localization[dest.name]);
+			win .addWidget(new Text(win, 0, 34, battleLog))
+					.addWidget(new Button(win, 10, 10, 480, 24, "close", () {
 						win.close = true;	 
 					}));
 			windows = win~windows;
@@ -76,6 +75,7 @@ class MovementAction : Action {
 		}
 		while(true) {
 			battleLog ~= "`FFFFFF"~localization["round"]~" "~round.to!string~"\n";
+			battleLog ~= "`o"~attacker.hexCode~(amt-totalAttackerLost).to!string~"`o`FFFFFF / `o"~dest.hexCode~dest.troops.to!string~"`o`FFFFFF\n";
 			int[] attackerRolls = [roll(attacker), roll(attacker)].sort!"a > b".release;
 			int[] defenderRolls = [roll(defender), roll(defender), roll(defender)].sort!"a > b".release;
 			int attackerLost;

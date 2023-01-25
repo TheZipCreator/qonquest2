@@ -7,6 +7,13 @@ import qonquest2.display : Color3f;
 import arsd.png;
 import arsd.simpledisplay : Point, Color;
 
+private int brightness(Color c) {
+	return (c.r + c.g + c.b)/3;
+}
+
+private enum COLOR_SWAP_THRESHOLD = 128; /// Which brightness to start putting the inverse color instead of the light color
+private enum LIGHT_TEXT_COLOR = Color3f(1, 1, 1); /// Light text color
+
 /// Represents a country
 class Country {
 	string name; /// Name of this country
@@ -30,8 +37,8 @@ class Country {
 		return "`"~Color3f(color).toHexString;
 	}
 
-	void opBinary(string s = "is")(Country b) {
-		return name == b.name;
+	@property Color3f textColor() {
+		return color.brightness() > COLOR_SWAP_THRESHOLD ? Color3f(color).inverse : LIGHT_TEXT_COLOR;
 	}
 }
 
@@ -60,8 +67,8 @@ class Province {
 		return "`"~Color3f(color).toHexString;
 	}
 
-	void opBinary(string s = "is")(Province b) {
-		return name == b.name;
+	@property Color3f textColor() {
+		return color.brightness() > COLOR_SWAP_THRESHOLD ? Color3f(color).inverse : LIGHT_TEXT_COLOR;
 	}
 }
 
@@ -108,15 +115,20 @@ void loadMap() {
 		if(col in provinceColors)
 			throw new MapLoadException("Duplicate province with color "~province["color"].toString~".");
 		auto owner = province["owner"].str;
+		string name = province["name"].str;
+		if("gen-country" in province && province["gen-country"].boolean)
+			countries[name] = new Country(name, col);
 		if(owner !in countries)
 			throw new MapLoadException("Unknown country "~owner~".");
-		auto prov = new Province(province["name"].str, col, province["center"].toPoint, countries[owner]);
+		auto prov = new Province(name, col, province["center"].toPoint, countries[owner]);
 		if("neighbors" in province)
 			foreach(i_; province["neighbors"].array) {
-				size_t i = i_.integer;
-				prov.neighbors ~= provinces[i];
-				provinces[i].neighbors ~= prov;
-				straits ~= tuple(prov.center, provinces[i].center);
+				string i = i_.str;
+				import std.algorithm;
+				Province other = provinces.find!(c => c.name == i)[0];
+				prov.neighbors ~= other;
+				other.neighbors ~= prov;
+				straits ~= tuple(prov.center, other.center);
 			}
 		provinces ~= prov;
 		provinceColors[col] = prov;

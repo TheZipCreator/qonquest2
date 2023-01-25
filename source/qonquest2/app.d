@@ -78,8 +78,12 @@ void changeState(State newState) {
 			                endTurn();
 			              }))
 										.addWidget(new Button(actionsWindow, 10, 500-30*2, 280, 24, "undo-action", () {
-											if(player.actions.length > 0)
+											if(player.actions.length > 0) {
+												auto action = player.actions[0];
+												if(auto da = cast(DeploymentAction)action)
+													player.country.deployableTroops += da.amt;
 												player.actions = player.actions[0..$-1];
+											}
 										}))
 			              .addWidget(new CountButton(actionsWindow, 10, 500-30*3, 280, 24, "move-troops", 1, int.max, (int amt) {
 			                prevMapMode = mapMode;
@@ -116,7 +120,12 @@ void redraw() {
 	}
 }
 
+bool shiftPressed; /// Whether or not shift is pressed
+
 void keyEvent(KeyEvent e) {
+	if(e.key == Key.Shift) {
+		shiftPressed = e.pressed;
+	}
 	final switch(state) {
 		case State.MAIN_MENU:
 			break;
@@ -160,7 +169,7 @@ void mouseEvent(MouseEvent e) {
 						break;
 					}
 				}
-			if(state == State.GAME) {
+			else if(state == State.GAME) {
 				Province clickedProvince;
 				outer:
 				foreach(p; provinces)
@@ -172,7 +181,7 @@ void mouseEvent(MouseEvent e) {
 				switch(mapMode) {
 					case MapMode.SELECT_COUNTRY:
 						if(clickedProvince !is null) {
-							players ~= new Player(clickedProvince.owner);
+							players = [new Player(clickedProvince.owner)];
 							mapMode = MapMode.COUNTRY;
 							foreach(p; provinces)
 								if(!p.owner.isPlayerCountry)

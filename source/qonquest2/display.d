@@ -89,8 +89,22 @@ struct Char {
 	bool[CHAR_SIZE][CHAR_SIZE] pixels; /// Pixels of this character
 	int fontSpacing = CHAR_SIZE; /// Width of this character (used in `text()`)
 	/// Renders this character at the given position (must be called within redrawOpenGlScene)
-	void render(float x, float y, float scale = 1, Color3f col = Color3f(1, 1, 1)) {
+	void render(float x, float y, float scale = 1, Color3f col = Color3f(1, 1, 1), bool drawOutline = false) {
 		glBegin(GL_QUADS);
+		if(drawOutline) {
+			glColor3f(0, 0, 0);
+			for(int i = 0; i < CHAR_SIZE; i++) {
+				for(int j = 0; j < CHAR_SIZE; j++) {
+					if(!pixels[i][j])
+						continue;
+					enum OUTLINE_SIZE = 1;
+					glVertex2f(x+i*scale-OUTLINE_SIZE,       y+j*scale-OUTLINE_SIZE      );
+					glVertex2f(x+i*scale+scale+OUTLINE_SIZE, y+j*scale                   );
+					glVertex2f(x+i*scale+scale+OUTLINE_SIZE, y+j*scale+scale+OUTLINE_SIZE);
+					glVertex2f(x+i*scale-OUTLINE_SIZE,       y+j*scale+scale+OUTLINE_SIZE);
+				}
+			}
+		}
 		col.draw;
 		for(int i = 0; i < CHAR_SIZE; i++) {
 			for(int j = 0; j < CHAR_SIZE; j++) {
@@ -132,9 +146,10 @@ static this() {
 }
 
 /// Renders a string at the given position
-void text(string s, float x, float y, float scale = 1, Color3f col = Color3f(0, 0, 0)) {
+void text(string s, float x, float y, float scale = 1, Color3f col = Color3f(0, 0, 0), bool drawOutline = false) {
 	string colorCode;
 	bool getColorCode;
+	bool doOutline = false;
 	float orgx = x;
 	foreach(i, dchar c; s) {
 		switch(c) {
@@ -146,6 +161,13 @@ void text(string s, float x, float y, float scale = 1, Color3f col = Color3f(0, 
 				x = orgx;
 				y += CHAR_SIZE*scale;
 				break;
+			case 'o':
+				if(getColorCode) {
+					getColorCode = false;
+					doOutline = !doOutline;
+					break;
+				}
+				goto default;
 			default:
 				if(getColorCode) {
 					colorCode ~= c;
@@ -156,14 +178,14 @@ void text(string s, float x, float y, float scale = 1, Color3f col = Color3f(0, 
 					break;
 				}
 				auto ch = characters[c];
-				ch.render(x, y, scale, col);
+				ch.render(x, y, scale, col, drawOutline != doOutline);
 				x += scale*ch.fontSpacing;
 		}
 	}
 }
 /// Renders a string center-aligned
-void textCenter(string s, float x, float y, float scale = 1, Color3f col = Color3f(0, 0, 0)) {
-	text(s, x-(textLen(s, scale)/2), y, scale, col);
+void textCenter(string s, float x, float y, float scale = 1, Color3f col = Color3f(0, 0, 0), bool drawOutline = false) {
+	text(s, x-(textLen(s, scale)/2), y, scale, col, drawOutline);
 }
 
 /// Length of text in pixels
@@ -292,19 +314,19 @@ void renderText(Country c) {
 		avg += Point2f(p.center);
 	}
 	avg /= count;
-	textCenter(localization[c.name], avg.x, avg.y, 1+((count-1)/2), Color3f(c.color).inverse);
+	textCenter(localization[c.name], avg.x, avg.y, 1+((count-1)/2), Color3f(1, 1, 1), true);
 }
 
 /// Renders a province's text (must be called after all provinces are rendered to avoid the text being clobbered)
 void renderText(Province p) {
-	textCenter(localization[p.name], p.center.x, p.center.y, 1, Color3f(p.color).inverse);
+	textCenter(localization[p.name], p.center.x, p.center.y, 1, Color3f(1, 1, 1), true);
 	string troopsText = p.troops.to!string;
 	int effective = p.effectiveTroops;
 	if(p.effectiveTroops != p.troops) {
 		int dif = effective-p.troops;
 		troopsText ~= " ("~(dif > 0 ? "+" : "")~dif.to!string~")";
 	}
-	textCenter(troopsText, p.center.x, p.center.y+CHAR_SIZE, 1, Color3f(p.color).inverse.mul(.5));
+	textCenter(troopsText, p.center.x, p.center.y+CHAR_SIZE, 1, Color3f(1, 1, 1), true);
 }
 
 bool hideStraits; /// Whether or not to hide straits
@@ -313,6 +335,8 @@ bool hideStraits; /// Whether or not to hide straits
 void redrawOpenGlScene() {
 	glLoadIdentity();
 	glOrtho(0, WIDTH, HEIGHT, 0, -1, 1);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
 	glBegin(GL_QUADS);
 	// draw game background
 	float bgMultiplier = 1;
