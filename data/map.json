@@ -68,7 +68,7 @@
 			"name": "northern-ireland",
 			"owner": "northern-ireland",
 			"color": [51, 62, 0],
-			"center": [249, 237],
+			"center": [249, 274],
 			"gen-country": true,
 			"neighbors": ["scotland"]
 		},
@@ -100,6 +100,133 @@
 			"center": [608, 577],
 			"gen-country": true
 		},
+		{
+			"name": "belgium",
+			"owner": "belgium",
+			"color": [0, 143, 0],
+			"center": [432, 360],
+			"gen-country": true
+		},
+		{
+			"name": "netherlands",
+			"owner": "netherlands",
+			"color": [194, 143, 66],
+			"center": [444, 323],
+			"gen-country": true
+		},
+		{
+			"name": "rhineland",
+			"owner": "rhineland",
+			"color": [224, 154, 204],
+			"center": [476, 351],
+			"gen-country": true
+		},
+		{
+			"name": "south-germany",
+			"owner": "south-germany",
+			"color": [96, 38, 80],
+			"center": [522, 387],
+			"gen-country": true
+		},
+		{
+			"name": "north-germany",
+			"owner": "north-germany",
+			"color": [165, 0, 154],
+			"center": [557, 316],
+			"gen-country": true
+		},
+		{
+			"name": "denmark",
+			"owner": "denmark",
+			"color": [148, 84, 183],
+			"center": [541, 261],
+			"gen-country": true
+		},
+		{
+			"name": "austria",
+			"owner": "austria",
+			"color": [224, 65, 179],
+			"center": [601, 428],
+			"gen-country": true
+		},
+		{
+			"name": "sweden",
+			"owner": "sweden",
+			"color": [157, 115, 89],
+			"center": [626, 172],
+			"gen-country": true,
+			"neighbors": ["denmark"]
+		},
+		{
+			"name": "norway",
+			"owner": "norway",
+			"color": [248, 123, 81],
+			"center": [524, 168],
+			"gen-country": true
+		},
+		{
+			"name": "switzerland",
+			"owner": "switzerland",
+			"color": [167, 35, 24],
+			"center": [490, 439],
+			"gen-country": true
+		},
+		{
+			"name": "poland",
+			"owner": "poland",
+			"color": [194, 0, 0],
+			"center": [634, 305],
+			"gen-country": true
+		},
+		{
+			"name": "silesia",
+			"owner": "silesia",
+			"color": [255, 0, 0],
+			"center": [623, 348],
+			"gen-country": true
+		},
+		{
+			"name": "czechia",
+			"owner": "czechia",
+			"color": [60, 133, 193],
+			"center": [596, 370],
+			"gen-country": true
+		},
+		{
+			"name": "slovakia",
+			"owner": "slovakia",
+			"color": [163, 133, 193],
+			"center": [665, 399],
+			"gen-country": true
+		},
+		{
+			"name": "kaliningrad",
+			"owner": "kaliningrad",
+			"color": [150, 82, 82],
+			"center": [692, 280],
+			"gen-country": true
+		},
+		{
+			"name": "lithuania",
+			"owner": "lithuania",
+			"color": [82, 150, 131],
+			"center": [729, 254],
+			"gen-country": true
+		},
+		{
+			"name": "latvia",
+			"owner": "latvia",
+			"color": [198, 57, 57],
+			"center": [730, 230],
+			"gen-country": true
+		},
+		{
+			"name": "estonia",
+			"owner": "estonia",
+			"color": [63, 116, 137],
+			"center": [749, 191],
+			"gen-country": true
+		}
 	],
 	"countries": []
 }
