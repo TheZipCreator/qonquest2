@@ -9,7 +9,7 @@ A turn-based map strategy game. Sequel to my earlier terminal game Qonquest (thi
 * Moved the "close" button in the battle window to the top so you can actually close the windows
 * Fixed a few bugs with reloading the game after a restart
 * Fixed a bug on windows where you wouldn't be able to deploy or move troops
-### ?
+### 2.2
 * Made country text scale a bit slower
 * Added more provinces
 * Added a how to play window

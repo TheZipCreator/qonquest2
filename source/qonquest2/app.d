@@ -58,6 +58,11 @@ void main(string[] args) {
 	win = new SimpleWindow(WIDTH, HEIGHT, "Qonquest 2", OpenGlOptions.yes, Resizability.automaticallyScaleIfPossible);
 	loadMap();
 	loadLocalization("eng");
+	// init some windows
+	import std.string : splitLines;
+	howToPlayWindow = new Window(500, 200, 560, cast(int)(localization["how-to-play-file"].splitLines.length*CHAR_SIZE), "how-to-play");
+	howToPlayWindow
+	.addWidget(new Text(howToPlayWindow, 0, 0, localization["how-to-play-file"]));
 	import std.functional : toDelegate;
 	changeState(State.MAIN_MENU);
 	// start event loop
@@ -71,12 +76,16 @@ void changeState(State newState) {
 	state = newState;
 	final switch(state) {
 		case State.MAIN_MENU:
+			howToPlayWindow.visible = false;
 			mainMenuWindow = new Window(WIDTH/4, HEIGHT/4, 600, 400, "main-menu");
 			mainMenuWindow.addWidget(new Button(mainMenuWindow, 50, 50, 500, 24, "play", () {
 				changeState(State.GAME);
 				mapMode = MapMode.SELECT_COUNTRY;
 			}));
-			windows = [mainMenuWindow];
+			mainMenuWindow.addWidget(new Button(mainMenuWindow, 50, 50+(30*1), 500, 24, "how-to-play", () {
+				howToPlayWindow.visible = !howToPlayWindow.visible;
+			}));
+			windows = [mainMenuWindow, howToPlayWindow];
 			break;
 		case State.GAME:
 			actionsWindow = new Window(300, 50, 300, 500, "actions");
@@ -107,11 +116,6 @@ void changeState(State newState) {
 				troopAmt = amt;
 			}))
 			.addWidget(new ActionBox(actionsWindow));
-
-			import std.string : splitLines;
-			howToPlayWindow = new Window(500, 200, 560, cast(int)(localization["how-to-play-file"].splitLines.length*CHAR_SIZE), "how-to-play");
-			howToPlayWindow
-			.addWidget(new Text(howToPlayWindow, 0, 0, localization["how-to-play-file"]));
 
 			viewWindow = new Window(50, 200, 150, 200, "view");
 			viewWindow

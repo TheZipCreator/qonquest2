@@ -353,6 +353,237 @@
 			"color": [194, 140, 0],
 			"center": [857, 393],
 			"gen-country": true
+		},
+		{
+			"name": "belarus",
+			"owner": "belarus",
+			"color": [58, 190, 128],
+			"center": [792, 295],
+			"gen-country": true
+		},
+		{
+			"name": "muscovia",
+			"owner": "muscovia",
+			"color": [93, 174, 89],
+			"center": [946, 272],
+			"gen-country": true
+		},
+		{
+			"name": "north-russia",
+			"owner": "north-russia",
+			"color": [221, 201, 89],
+			"center": [879, 143],
+			"gen-country": true
+		},
+		{
+			"name": "finland",
+			"owner": "finland",
+			"color": [140, 123, 81],
+			"center": [784, 104],
+			"gen-country": true
+		},
+		{
+			"name": "crimea",
+			"owner": "crimea",
+			"color": [70, 123, 85],
+			"center": [915, 476],
+			"gen-country": true
+		},
+		{
+			"name": "donbass",
+			"owner": "donbass",
+			"color": [193, 123, 85],
+			"center": [967, 408],
+			"gen-country": true
+		},
+		{
+			"name": "caucasus",
+			"owner": "caucasus",
+			"color": [221, 115, 89],
+			"center": [1044, 469],
+			"gen-country": true,
+			"neighbors": ["crimea"]
+		},
+		{
+			"name": "georgia",
+			"owner": "georgia",
+			"color": [181, 110, 99],
+			"center": [1073, 538],
+			"gen-country": true
+		},
+		{
+			"name": "azerbaijan",
+			"owner": "azerbaijan",
+			"color": [99, 136, 181],
+			"center": [1152, 568],
+			"gen-country": true
+		},
+		{
+			"name": "armenia",
+			"owner": "armenia",
+			"color": [99, 209, 181],
+			"center": [1100, 581],
+			"gen-country": true
+		},
+		{
+			"name": "south-azerbaijan",
+			"owner": "south-azerbaijan",
+			"color": [140, 128, 118],
+			"center": [1135, 630],
+			"gen-country": true
+		},
+		{
+			"name": "persia",
+			"owner": "persia",
+			"color": [141, 117, 183],
+			"center": [1173, 663],
+			"gen-country": true
+		},
+		{
+			"name": "iraq",
+			"owner": "iraq",
+			"color": [89, 102, 64],
+			"center": [1089, 726],
+			"gen-country": true
+		},
+		{
+			"name": "aleppo",
+			"owner": "aleppo",
+			"color": [183, 102, 64],
+			"center": [1007, 682],
+			"gen-country": true
+		},
+		{
+			"name": "damascus",
+			"owner": "damascus",
+			"color": [226, 126, 79],
+			"center": [985, 732],
+			"gen-country": true
+		},
+		{
+			"name": "lebanon",
+			"owner": "lebanon",
+			"color": [160, 51, 51],
+			"center": [960, 716],
+			"gen-country": true
+		},
+		{
+			"name": "aegean-islands",
+			"owner": "aegean-islands",
+			"color": [70, 205, 221],
+			"center": [774, 687],
+			"gen-country": true,
+			"neighbors": ["greece"]
+		},
+		{
+			"name": "cyprus",
+			"owner": "cyprus",
+			"color": [89, 102, 174],
+			"center": [911, 693],
+			"gen-country": true,
+			"neighbors": ["west-turkey", "aegean-islands"]
+		},
+		{
+			"name": "israel",
+			"owner": "israel",
+			"color": [109, 182, 51],
+			"center": [940, 748],
+			"gen-country": true
+		},
+		{
+			"name": "palestine",
+			"owner": "palestine",
+			"color": [190, 182, 51],
+			"center": [948, 757],
+			"gen-country": true
+		},
+		{
+			"name": "egypt",
+			"owner": "egypt",
+			"color": [85, 74, 221],
+			"center": [883, 758],
+			"gen-country": true
+		},
+		{
+			"name": "libya",
+			"owner": "libya",
+			"color": [85, 74, 89],
+			"center": [570, 782],
+			"gen-country": true
+		},
+		{
+			"name": "tunisia",
+			"owner": "tunisia",
+			"color": [165, 101, 111],
+			"center": [499, 718],
+			"gen-country": true
+		},
+		{
+			"name": "algeria",
+			"owner": "algeria",
+			"color": [31, 115, 89],
+			"center": [395, 722],
+			"gen-country": true
+		},
+		{
+			"name": "morocco",
+			"owner": "morocco",
+			"color": [82, 115, 89],
+			"center": [240, 737],
+			"gen-country": true,
+			"neighbors": ["spain"]
+		},
+		{
+			"name": "malta",
+			"owner": "malta",
+			"color": [244, 151, 0],
+			"center": [594, 675],
+			"gen-country": true,
+			"neighbors": ["south-italy", "tunisia"]
+		},
+		{
+			"name": "kazakhstan",
+			"owner": "kazakhstan",
+			"color": [120, 153, 148],
+			"center": [1159, 391],
+			"gen-country": true
+		},
+		{
+			"name": "siberia",
+			"owner": "siberia",
+			"color": [221, 174, 89],
+			"center": [1150, 231],
+			"gen-country": true
+		},
+		{
+			"name": "saudi-arabia",
+			"owner": "saudi-arabia",
+			"color": [85, 74, 51],
+			"center": [1041, 766],
+			"gen-country": true
+		},
+		{
+			"name": "jordan",
+			"owner": "jordan",
+			"color": [190, 74, 51],
+			"center": [978, 770],
+			"gen-country": true
+		},
+		{
+			"name": "faroe-islands",
+			"owner": "faroe-islands",
+			"color": [148, 174, 183],
+			"center": [276, 126],
+			"gen-country": true,
+			"neighbors": ["scotland", "norway"]
+		},
+		{
+			"name": "iceland",
+			"owner": "iceland",
+			"color": [109, 128, 135],
+			"center": [124, 71],
+			"gen-country": true,
+			"neighbors": ["faroe-islands"]
 		}
 	],
 	"countries": []
