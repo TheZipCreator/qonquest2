@@ -314,7 +314,7 @@ void renderText(Country c) {
 		avg += Point2f(p.center);
 	}
 	avg /= count;
-	textCenter(localization[c.name], avg.x, avg.y, 1+((count-1)/2), Color3f(1, 1, 1), true);
+	textCenter(localization[c.name], avg.x, avg.y, 1+((count-1)/3), Color3f(1, 1, 1), true);
 }
 
 /// Renders a province's text (must be called after all provinces are rendered to avoid the text being clobbered)

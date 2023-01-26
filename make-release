@@ -13,4 +13,4 @@ cp -r ./data ./$2 ./release/qonquest2-$1
 if [ -e ./release/qonquest2-$1.7z ]; then
 	rm ./release/qonquest2-$1.7z
 fi
-7z a ./release/qonquest-$1.7z ./release/qonquest2-$1/*
+7z a ./release/qonquest2-$1.7z ./release/qonquest2-$1/*
