@@ -163,10 +163,10 @@ void endTurn() {
 	player.actions = [];
 	if(currentPlayer+1 == players.length) {
 		foreach(c; countries) {
-			if(!c.isPlayerCountry) {
-				c.deployableTroops = cast(int)c.ownedProvinces.length*2;
-				c.runAI();
-			}
+			if(c.isPlayerCountry)
+				continue;
+			c.deployableTroops = cast(int)c.ownedProvinces.length*2;
+			c.runAI();
 		}
 		currentPlayer = 0;
 		currentTurn++;

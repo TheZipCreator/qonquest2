@@ -1,4 +1,27 @@
-test123
-
-
-aaaa
+Hello, welcome to Qonquest 2!
+=====================================================================
+Qonquest 2 is a stategy game where you attempt to take over Europe.
+The map is split into several provinces, and each province has an
+owner and a troop count. The owner is a country, and at the start of
+the game each province is owned by a country with the same name. You
+can view the troop count of each province by checking the "Provinces"
+checkbox, which shows the province names and the troop counts of each
+province. Each turn, you get a number of troops equal to the number
+of provinces the country you're playing as has times two. You can
+then deploy these troops with the "deploy troops" button. First
+however, you must set an amount of troops to deploy. This can be done
+by left or right clicking the number next to it, which increase or
+decrease the number respectively. Shift+clicking the number will
+increase or decrease it by 5. Once you've deployed all your troops,
+you can move them, by first setting the amount of troops to move, and
+then pressing the button. Then you can select the province you wish
+to move from, and then the province you wish to move to (available
+provinces should be highlighted. If no provinces are highlighted, you
+either probably forgot to deploy, or you set the number higher than
+the amount of troops you have in any province). Once you're ready,
+you can press "end turn" to commit all the actions you've queued. If
+you moved troops into enemy territory, a battle will occur, and
+you'll get a window showing the result of that battle. If you win,
+you will conquer the province. If you lose, then you will lose all
+troops you moved into the province. Now, you should be ready to play.
+Have fun!

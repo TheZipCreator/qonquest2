@@ -109,7 +109,7 @@ void changeState(State newState) {
 			.addWidget(new ActionBox(actionsWindow));
 
 			import std.string : splitLines;
-			howToPlayWindow = new Window(800, 50, 300, cast(int)(localization["how-to-play-file"].splitLines.length*CHAR_SIZE), "how-to-play");
+			howToPlayWindow = new Window(500, 200, 560, cast(int)(localization["how-to-play-file"].splitLines.length*CHAR_SIZE), "how-to-play");
 			howToPlayWindow
 			.addWidget(new Text(howToPlayWindow, 0, 0, localization["how-to-play-file"]));
 
