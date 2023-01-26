@@ -18,6 +18,7 @@ Window mainMenuWindow;
 // game windows
 Window viewWindow;
 Window actionsWindow;
+Window howToPlayWindow;
 
 /// Controls the state of the game
 enum State {
@@ -74,42 +75,51 @@ void changeState(State newState) {
 			break;
 		case State.GAME:
 			actionsWindow = new Window(300, 50, 300, 500, "actions");
-			actionsWindow .addWidget(new Button(actionsWindow, 10, 500-30, 280, 24, "end-turn", () {
-			                endTurn();
-			              }))
-										.addWidget(new Button(actionsWindow, 10, 500-30*2, 280, 24, "undo-action", () {
-											if(player.actions.length > 0) {
-												auto action = player.actions[0];
-												if(auto da = cast(DeploymentAction)action)
-													player.country.deployableTroops += da.amt;
-												player.actions = player.actions[0..$-1];
-											}
-										}))
-			              .addWidget(new CountButton(actionsWindow, 10, 500-30*3, 280, 24, "move-troops", 1, int.max, (int amt) {
-			                prevMapMode = mapMode;
-									    mapMode = MapMode.MOVE_TROOPS_1;		
-										  availableProvinces = provinces.filter!(p => p !is null && p.owner == player.country && p.effectiveTroops >= amt).array;
-			             	  troopAmt = amt;
-									  }))
-									  .addWidget(new CountButton(actionsWindow, 10, 500-30*4, 280, 24, "deploy-troops", 0, int.max, (int amt) {
-										  if(amt < 1)
-												return;
-											availableProvinces = player.country.ownedProvinces();
-										  prevMapMode = mapMode;
-										  mapMode = MapMode.DEPLOY_TROOPS;
-										  troopAmt = amt;
-									  }))
-										
-									  .addWidget(new ActionBox(actionsWindow));
+			actionsWindow
+			.addWidget(new Button(actionsWindow, 10, 500-30, 280, 24, "end-turn", () {
+				endTurn();
+			}))
+			.addWidget(new Button(actionsWindow, 10, 500-30*2, 280, 24, "undo-action", () {
+				if(player.actions.length > 0) {
+					auto action = player.actions[0];
+					if(auto da = cast(DeploymentAction)action)
+						player.country.deployableTroops += da.amt;
+					player.actions = player.actions[0..$-1];
+				}
+			}))
+			.addWidget(new CountButton(actionsWindow, 10, 500-30*3, 280, 24, "move-troops", 1, int.max, (int amt) {
+				prevMapMode = mapMode;
+				mapMode = MapMode.MOVE_TROOPS_1;		
+				availableProvinces = provinces.filter!(p => p !is null && p.owner == player.country && p.effectiveTroops >= amt).array;
+				troopAmt = amt;
+			}))
+			.addWidget(new CountButton(actionsWindow, 10, 500-30*4, 280, 24, "deploy-troops", 0, int.max, (int amt) {
+				if(amt < 1)
+					return;
+				availableProvinces = player.country.ownedProvinces();
+				prevMapMode = mapMode;
+				mapMode = MapMode.DEPLOY_TROOPS;
+				troopAmt = amt;
+			}))
+			.addWidget(new ActionBox(actionsWindow));
+
+			import std.string : splitLines;
+			howToPlayWindow = new Window(800, 50, 300, cast(int)(localization["how-to-play-file"].splitLines.length*CHAR_SIZE), "how-to-play");
+			howToPlayWindow
+			.addWidget(new Text(howToPlayWindow, 0, 0, localization["how-to-play-file"]));
+
 			viewWindow = new Window(50, 200, 150, 200, "view");
-			viewWindow.addWidget(new Checkbox(viewWindow, 10, 10, "actions", &actionsWindow.visible))
-			          .addWidget(new Checkbox(viewWindow, 10, 200-(Checkbox.SIZE+10)*2, "hide-straits", &hideStraits))
-			          .addWidget(new Checkbox(viewWindow, 10, 200-(Checkbox.SIZE+10), "provinces", () {
-			            mapMode = mapMode.PROVINCE;
-			          }, () {
-			            mapMode = mapMode.COUNTRY;
-			          }));
-			windows = [viewWindow, actionsWindow];
+			viewWindow
+			.addWidget(new Checkbox(viewWindow, 10, 10, "actions", &actionsWindow.visible))
+			.addWidget(new Checkbox(viewWindow, 10, 10+(Checkbox.SIZE+10), "how-to-play", &howToPlayWindow.visible))
+			.addWidget(new Checkbox(viewWindow, 10, 200-(Checkbox.SIZE+10)*2, "hide-straits", &hideStraits))
+			.addWidget(new Checkbox(viewWindow, 10, 200-(Checkbox.SIZE+10), "provinces", () {
+				mapMode = mapMode.PROVINCE;
+			}, () {
+				mapMode = mapMode.COUNTRY;
+			}));
+
+			windows = [viewWindow, actionsWindow, howToPlayWindow];
 	}
 }
 

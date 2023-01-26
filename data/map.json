@@ -226,6 +226,119 @@
 			"color": [63, 116, 137],
 			"center": [749, 191],
 			"gen-country": true
+		},
+		{
+			"name": "hungary",
+			"owner": "hungary",
+			"color": [163, 133, 93],
+			"center": [668, 434],
+			"gen-country": true
+		},
+		{
+			"name": "slovenia",
+			"owner": "slovenia",
+			"color": [47, 140, 217],
+			"center": [607, 452],
+			"gen-country": true
+		},
+		{
+			"name": "croatia",
+			"owner": "croatia",
+			"color": [47, 78, 155],
+			"center": [631, 472],
+			"gen-country": true
+		},
+		{
+			"name": "bosnia",
+			"owner": "bosnia",
+			"color": [47, 85, 217],
+			"center": [644, 497],
+			"gen-country": true
+		},
+		{
+			"name": "serbia",
+			"owner": "serbia",
+			"color": [198, 91, 64],
+			"center": [694, 506],
+			"gen-country": true
+		},
+		{
+			"name": "montenegro",
+			"owner": "montenegro",
+			"color": [232, 91, 64],
+			"center": [666, 532],
+			"gen-country": true
+		},
+		{
+			"name": "kosovo",
+			"owner": "kosovo",
+			"color": [229, 106, 75],
+			"center": [696, 523],
+			"gen-country": true
+		},
+		{
+			"name": "macedonia",
+			"owner": "macedonia",
+			"color": [159, 20, 75],
+			"center": [711, 545],
+			"gen-country": true
+		},
+		{
+			"name": "albania",
+			"owner": "albania",
+			"color": [194, 48, 119],
+			"center": [682, 578],
+			"gen-country": true
+		},
+		{
+			"name": "romania",
+			"owner": "romania",
+			"color": [91, 91, 64],
+			"center": [776, 482],
+			"gen-country": true
+		},
+		{
+			"name": "moldova",
+			"owner": "moldova",
+			"color": [194, 190, 0],
+			"center": [813, 429],
+			"gen-country": true
+		},
+		{
+			"name": "bulgaria",
+			"owner": "bulgaria",
+			"color": [47, 140, 75],
+			"center": [793, 533],
+			"gen-country": true
+		},
+		{
+			"name": "greece",
+			"owner": "greece",
+			"color": [70, 205, 163],
+			"center": [715, 606],
+			"gen-country": true
+		},
+		{
+			"name": "thrace",
+			"owner": "thrace",
+			"color": [219, 97, 70],
+			"center": [819, 557],
+			"gen-country": true
+		},
+		{
+			"name": "west-turkey",
+			"owner": "west-turkey",
+			"color": [219, 40, 0],
+			"center": [910, 609],
+			"neighbors": ["thrace"],
+			"gen-country": true
+		},
+		{
+			"name": "east-turkey",
+			"owner": "east-turkey",
+			"color": [163, 40, 0],
+			"center": [1052, 622],
+			"gen-country": true
 		}
 	],
 	"countries": []

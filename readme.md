@@ -11,6 +11,9 @@ A turn-based map strategy game. Sequel to my earlier terminal game Qonquest (thi
 * HOPEFULLY fixed a bug on windows where you wouldn't be able to deploy or move troops
 ### ?
 * Made country text scale a bit slower
+* Added more provinces
+* Added a how to play window
 ## Credits
 TheZipCreator (me) - programming the game
+
 PL\_ADI (pollen#8033 on discord) - making the map

@@ -31,6 +31,22 @@
 	"lithuania": "Lithuania",
 	"latvia": "Latvia",
 	"estonia": "Estonia",
+	"hungary": "Hungary",
+	"slovenia": "Slovenia",
+	"croatia": "Croatia",
+	"bosnia": "Bosnia",
+	"serbia": "Serbia",
+	"montenegro": "Montenegro",
+	"kosovo": "Kosovo",
+	"macedonia": "Macedonia",
+	"albania": "Albania",
+	"romania": "Romania",
+	"moldova": "Moldova",
+	"bulgaria": "Bulgaria",
+	"greece": "Greece",
+	"thrace": "Thrace",
+	"west-turkey": "West Turkey",
+	"east-turkey": "East Turkey",
 
 	"view": "View",
 	"actions": "Actions",
@@ -59,5 +75,11 @@
 	"won": "You have won!",
 	"lost": "You have lost",
 	"in-turns": "in %s turns. Press any key to return to the main menu.",
-	"hide-straits": "Hide Straits"
+	"hide-straits": "Hide Straits",
+	"how-to-play": "How to Play",
+
+	"how-to-play-file": {
+		"type": "file",
+		"location": "data/localization/how-to-play-eng.txt"
+	}
 }

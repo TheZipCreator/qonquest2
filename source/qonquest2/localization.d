@@ -20,6 +20,19 @@ void loadLocalization(string language) {
 		return; // TODO: report error
 	auto json = path.readText.parseJSON;
 	foreach(string k, v; json) {
-		localization.keys[k] = v.str;
+		switch(v.type) {
+			case JSONType.string:
+				localization.keys[k] = v.str;
+				break;
+			case JSONType.object:
+				final switch(v["type"].str) {
+					case "file":
+						localization.keys[k] = readText(v["location"].str);
+						break;
+				}
+				break;
+			default:
+				throw new Exception("Invalid value type");
+		}
 	}
 }
