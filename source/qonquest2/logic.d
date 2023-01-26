@@ -163,9 +163,10 @@ void endTurn() {
 	player.actions = [];
 	if(currentPlayer+1 == players.length) {
 		foreach(c; countries) {
-			c.deployableTroops = cast(int)c.ownedProvinces.length*2;
-			if(!c.isPlayerCountry)
+			if(!c.isPlayerCountry) {
+				c.deployableTroops = cast(int)c.ownedProvinces.length*2;
 				c.runAI();
+			}
 		}
 		currentPlayer = 0;
 		currentTurn++;
@@ -175,6 +176,8 @@ void endTurn() {
 		mapMode = MapMode.LOST;
 	else if(player.country.ownedProvinces.length == provinces.length)
 		mapMode = MapMode.WON;
+	foreach(c; players.map!"a.country")
+		c.deployableTroops = cast(int)c.ownedProvinces.length*2;
 }
 
 alias Frontier = Tuple!(Province, "src", Province, "dest");

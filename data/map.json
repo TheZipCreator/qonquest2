@@ -259,7 +259,7 @@
 			"name": "serbia",
 			"owner": "serbia",
 			"color": [198, 91, 64],
-			"center": [694, 506],
+			"center": [694, 496],
 			"gen-country": true
 		},
 		{
@@ -273,7 +273,7 @@
 			"name": "kosovo",
 			"owner": "kosovo",
 			"color": [229, 106, 75],
-			"center": [696, 523],
+			"center": [706, 523],
 			"gen-country": true
 		},
 		{
@@ -338,6 +338,20 @@
 			"owner": "east-turkey",
 			"color": [163, 40, 0],
 			"center": [1052, 622],
+			"gen-country": true
+		},
+		{
+			"name": "vojvodina",
+			"owner": "vojvodina",
+			"color": [143, 91, 64],
+			"center": [678, 462],
+			"gen-country": true
+		},
+		{
+			"name": "ukraine",
+			"owner": "ukraine",
+			"color": [194, 140, 0],
+			"center": [857, 393],
 			"gen-country": true
 		}
 	],

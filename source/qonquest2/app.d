@@ -49,6 +49,11 @@ Province selectedProvince; /// Interim value for moving troops
 MapMode mapMode;           /// The current map mode
 MapMode prevMapMode;       /// The previous map mode
 
+/// Resets global variables
+void resetGlobals() {
+	currentTurn = 0;
+}
+
 void main(string[] args) {
 	win = new SimpleWindow(WIDTH, HEIGHT, "Qonquest 2", OpenGlOptions.yes, Resizability.automaticallyScaleIfPossible);
 	loadMap();
@@ -151,6 +156,7 @@ void keyEvent(KeyEvent e) {
 				case MapMode.WON:
 				case MapMode.LOST:
 					loadMap();
+					resetGlobals();
 					changeState(State.MAIN_MENU);
 					break;
 				default:
