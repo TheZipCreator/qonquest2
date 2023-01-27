@@ -122,7 +122,7 @@ struct Char {
 
 Char[] characters; /// Characters in the font
 
-static this() {
+void loadCharmap() {
 	// load font
 	auto fontImage = readPng("data/font.png");
 	import std.algorithm, std.array, std.string, std.conv;

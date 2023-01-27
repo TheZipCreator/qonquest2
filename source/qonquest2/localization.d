@@ -5,6 +5,7 @@ import std.file, std.json;
 
 import qonquest2.app : howToPlayWindow;
 import qonquest2.window : Text;
+import qonquest2.display : CHAR_SIZE;
 
 private struct Localization {
 	string[string] keys;
@@ -45,4 +46,6 @@ void loadLocalization(string language) {
 		}
 	}
 	(cast(Text)howToPlayWindow.widgets[0]).text = localization["how-to-play-file"];
+	import std.string : splitLines;
+	howToPlayWindow.height = cast(int)(localization["how-to-play-file"].splitLines.length)*CHAR_SIZE;
 }

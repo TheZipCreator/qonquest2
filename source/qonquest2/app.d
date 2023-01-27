@@ -58,12 +58,13 @@ void resetGlobals() {
 void main(string[] args) {
 	win = new SimpleWindow(WIDTH, HEIGHT, "Qonquest 2", OpenGlOptions.yes, Resizability.automaticallyScaleIfPossible);
 	loadMap();
-	loadLocalization("eng-us");
+	loadCharmap();
 	// init some windows
 	import std.string : splitLines;
 	howToPlayWindow = new Window(500, 200, 560, cast(int)(localization["how-to-play-file"].splitLines.length*CHAR_SIZE), "how-to-play");
 	howToPlayWindow
 	.addWidget(new Text(howToPlayWindow, 0, 0, localization["how-to-play-file"]));
+	loadLocalization("eng-us");
 	import std.functional : toDelegate;
 	changeState(State.MAIN_MENU);
 	// start event loop
