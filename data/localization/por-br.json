@@ -82,6 +82,9 @@
 	"faroe-islands": "Ilhas Faroé",
 	"iceland": "Islândia",
 
+	"qonquest-2": "Qonquest 2",
+	"foss-notice": "Este é um software livre. Por favor veja o arquivo 'LICENSE' incluído antes de utilizá-lo.",
+
 	"view": "Ver",
 	"actions": "Ações",
 	"main-menu": "Menu Principal",
@@ -112,6 +115,7 @@
 	"hide-straits": "Esconder Estreitos",
 	"how-to-play": "Como Jogar",
 	"languages": "Línguas",
+	"source-code": "Código Fonte",
 
 	"how-to-play-file": {
 		"type": "file",

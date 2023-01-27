@@ -9,7 +9,7 @@ fi
 if [ ! -d ./release/qonquest2-$1 ]; then
 	mkdir ./release/qonquest2-$1
 fi
-cp -r ./data ./$2 ./release/qonquest2-$1
+cp -r ./data ./$2 LICENSE ./release/qonquest2-$1
 if [ -e ./release/qonquest2-$1.7z ]; then
 	rm ./release/qonquest2-$1.7z
 fi

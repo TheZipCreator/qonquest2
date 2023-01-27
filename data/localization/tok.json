@@ -82,6 +82,9 @@
 	"faroe-islands": "ma Palo",
 	"iceland": "ma Isilan",
 
+	"qonquest-2": "ma Konke nanpa tu",
+	"foss-notice": "sina ken ante ale e ilo ni. sina wile sona mute la, o lukin e ijo 'LICENSE'.",
+
 	"view": "lukin",
 	"actions": "pali",
 	"main-menu": "lipu nanpa wan",
@@ -112,6 +115,7 @@
 	"hide-straits": "o weka e palisa ma",
 	"how-to-play": "nasin pali",
 	"languages": "toki",
+	"source-code": "toki nasin tan",
 
 	"how-to-play-file": {
 		"type": "file",

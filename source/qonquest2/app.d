@@ -80,12 +80,17 @@ void changeState(State newState) {
 		case State.MAIN_MENU:
 			howToPlayWindow.visible = false;
 			mainMenuWindow = new Window(WIDTH/4, HEIGHT/4, 600, 400, "main-menu");
-			mainMenuWindow.addWidget(new Button(mainMenuWindow, 50, 50, 500, 24, "play", () {
+			mainMenuWindow
+			.addWidget(new Button(mainMenuWindow, 50, 50, 500, 24, "play", () {
 				changeState(State.GAME);
 				mapMode = MapMode.SELECT_COUNTRY;
-			}));
-			mainMenuWindow.addWidget(new Button(mainMenuWindow, 50, 50+(30*1), 500, 24, "how-to-play", () {
+			}))
+			.addWidget(new Button(mainMenuWindow, 50, 50+(30*1), 500, 24, "how-to-play", () {
 				howToPlayWindow.visible = !howToPlayWindow.visible;
+			}))
+			.addWidget(new Button(mainMenuWindow, 50, 400-30, 500, 24, "source-code", () {
+				import std.process : browse;
+				browse(`https://www.github.com/TheZipCreator/qonquest2`);			
 			}));
 			languagesWindow = new Window(30, HEIGHT/4, 200, 400, "languages");
 			{

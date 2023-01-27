@@ -433,5 +433,9 @@ void redrawOpenGlScene() {
 		}
 		return;
 	}
+	if(state == State.MAIN_MENU) {
+		textCenter(localization["qonquest-2"], WIDTH/2, 0, 4, Color3f(1, 1, 1));
+		textCenter(localization["foss-notice"], WIDTH/2, CHAR_SIZE*4, 1, Color3f(1, 1, 1));
+	}
 	renderWindows();
 }
