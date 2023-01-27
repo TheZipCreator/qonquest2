@@ -1,3 +1,4 @@
 #!/bin/bash
+# builds qonquest 2 for linux
 dub build --arch x86_64-linux-gnu -b release
 ./make-release linux qonquest2
