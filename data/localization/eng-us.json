@@ -111,9 +111,10 @@
 	"in-turns": "in %s turns. Press any key to return to the main menu.",
 	"hide-straits": "Hide Straits",
 	"how-to-play": "How to Play",
+	"languages": "Languages",
 
 	"how-to-play-file": {
 		"type": "file",
-		"location": "data/localization/how-to-play-eng.txt"
+		"location": "data/localization/how-to-play-eng-us.txt"
 	}
 }

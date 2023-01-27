@@ -14,6 +14,7 @@ Point heldWindowPos; /// Where the held window is being dragged from
 
 // main menu windows
 Window mainMenuWindow;
+Window languagesWindow;
 
 // game windows
 Window viewWindow;
@@ -57,7 +58,7 @@ void resetGlobals() {
 void main(string[] args) {
 	win = new SimpleWindow(WIDTH, HEIGHT, "Qonquest 2", OpenGlOptions.yes, Resizability.automaticallyScaleIfPossible);
 	loadMap();
-	loadLocalization("eng");
+	loadLocalization("eng-us");
 	// init some windows
 	import std.string : splitLines;
 	howToPlayWindow = new Window(500, 200, 560, cast(int)(localization["how-to-play-file"].splitLines.length*CHAR_SIZE), "how-to-play");
@@ -85,7 +86,16 @@ void changeState(State newState) {
 			mainMenuWindow.addWidget(new Button(mainMenuWindow, 50, 50+(30*1), 500, 24, "how-to-play", () {
 				howToPlayWindow.visible = !howToPlayWindow.visible;
 			}));
-			windows = [mainMenuWindow, howToPlayWindow];
+			languagesWindow = new Window(30, HEIGHT/4, 200, 400, "languages");
+			{
+				int i;
+				foreach(k, v; languages) {
+					languagesWindow.addWidget(new Button(languagesWindow, 10, 50+(30*i++), 180, 24, v, false, () {
+						loadLocalization(k);
+					}));
+				}
+			}
+			windows = [mainMenuWindow, howToPlayWindow, languagesWindow];
 			break;
 		case State.GAME:
 			actionsWindow = new Window(300, 50, 300, 500, "actions");

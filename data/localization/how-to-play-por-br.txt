@@ -1,0 +1,35 @@
+Olá, bem-vindo à Qonquista 2!
+=====================================================================
+Qonquista 2 é um jogo de estratégia no qual você deve tomar controle
+da Europa.
+O mapa é dividido em várias províncias, e cada província tem um dono
+e um número de tropas. O dono é um país, e no começo do jogo cada
+província é comandada por um país de mesmo nome.
+É possível visualizar o número de tropas de cada província ao clicar
+na caixa "Províncias", a qual revela o nome das províncias e o número
+de tropas de cada uma.
+A cada turno, você ganha um número de tropas igual ao número de
+províncias que o seu país controla multiplicado por dois. Você pode
+posicionar essas tropas ao clicar no botão "Posicionar Tropas".
+No entanto, você deve primeiro escolher um número de tropas para
+posicionar. Ao clicar com os botões esquerdos e direitos do mouse
+no número próximo ao botão, você poderá aumentar ou diminuir o número
+de tropas escolhidas, respectivamente. Ao segurar a tecla "Shift" e
+clicar, é possível aumentar ou diminuir o número de tropas escolhidas
+por 5.
+Uma vez que você tenha posicionado todas as suas tropas,
+você poderá movê-las, primeiramente escolhendo o número de tropas as
+quais você pretende mover e clicando no botão. Você deve então
+selecionar a província de origem, a qual você pretende mover as
+tropas, e então selecionar a província alvo (províncias disponíveis
+estarão em destaque. Se nenhuma província está em destaque, você
+provavelmente esqueceu de posicionar suas tropas, ou você escolheu
+um número maior do que qualquer número de tropas em suas províncias).
+Quando estiver pronto,
+você deve clicar no botão "Finalizar Turno" para proceder com todas
+as ações realizadas por você. Se você moveu suas tropas em território
+inimigo, uma batalha ocorrerá, e você verá uma janela relatando os
+resultados. Se vencer, irá conquistar a província. Se perder, perderá
+todas as tropas que moveu até a província.
+Agora você deve estar pronto para jogar.
+Se divirta!

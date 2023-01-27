@@ -76,11 +76,12 @@ class Checkbox : Widget {
 }
 
 /// A simple button
-class Button : Widget {
+final class Button : Widget {
 	string label;
 	void delegate() onClick;
 	int width;
 	int height;
+	bool useLocalization = true;
 
 	enum COLOR = Color3f(.75, .75, .75);
 
@@ -90,6 +91,11 @@ class Button : Widget {
 		this.height = height;
 		this.label = label;
 		this.onClick = onClick;
+	}
+
+	this(Window parent, int x, int y, int width, int height, string label, bool useLocalization, void delegate() onClick) {
+		this.useLocalization = useLocalization;
+		this(parent, x, y, width, height, label, onClick);
 	}
 
 	override void draw(bool active) {

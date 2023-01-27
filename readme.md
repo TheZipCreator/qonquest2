@@ -24,3 +24,5 @@ A turn-based map strategy game. Sequel to my earlier terminal game Qonquest (thi
 TheZipCreator (me) - programming the game
 
 PL\_ADI (pollen#8033 on discord) - making the map
+
+SeñorConejo (rabbit#6861) - Portuguese translation

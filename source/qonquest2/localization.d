@@ -3,6 +3,9 @@ module qonquest2.localization;
 
 import std.file, std.json;
 
+import qonquest2.app : howToPlayWindow;
+import qonquest2.window : Text;
+
 private struct Localization {
 	string[string] keys;
 	
@@ -11,10 +14,16 @@ private struct Localization {
 	}
 }
 
-Localization localization;
+Localization localization; /// The struct containing all localizations
+string[string] languages;  /// List of languages (ISO 639-3 code -> Language name)
+
+static this() {
+	foreach(string k, v; "data/localization/language-names.json".readText.parseJSON)
+		languages[k] = v.str;
+}
 
 void loadLocalization(string language) {
-	localization = Localization();
+	localization.keys.clear();
 	string path = "data/localization/"~language~".json";
 	if(!path.exists || !path.isFile)
 		return; // TODO: report error
@@ -35,4 +44,5 @@ void loadLocalization(string language) {
 				throw new Exception("Invalid value type");
 		}
 	}
+	(cast(Text)howToPlayWindow.widgets[0]).text = localization["how-to-play-file"];
 }

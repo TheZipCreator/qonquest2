@@ -239,7 +239,7 @@ void render(Button b, bool active) {
 	auto parent = b.parent;
 	Button.COLOR.draw;
 	rect(b.absX, b.absY, b.width, b.height);
-	textCenter(localization[b.label], b.absX+(b.width/2), b.absY);
+	textCenter(b.useLocalization ? localization[b.label] : b.label, b.absX+(b.width/2), b.absY);
 }
 
 /// Renders an action box
