@@ -20,9 +20,11 @@ A turn-based map strategy game. Sequel to my earlier terminal game Qonquest (thi
 * Added a how to play window
 * Fixed a bug where the turn counter would not be reset between games
 * Fixed a bug where you'd get extra troops per turn
+### 2.2.1
+* Added localization for Brazilian Portuguese and toki pona.
 ## Credits
 TheZipCreator (me) - programming the game
 
 PL\_ADI (pollen#8033 on discord) - making the map
 
-SeñorConejo (rabbit#6861) - Portuguese translation
+SeñorConejo (rabbit#6861 on discord) - Portuguese translation
