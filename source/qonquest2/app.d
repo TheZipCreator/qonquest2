@@ -111,7 +111,7 @@ void changeState(State newState) {
 			}))
 			.addWidget(new Button(actionsWindow, 10, 500-30*2, 280, 24, "undo-action", () {
 				if(player.actions.length > 0) {
-					auto action = player.actions[0];
+					auto action = player.actions[$-1];
 					if(auto da = cast(DeploymentAction)action)
 						player.country.deployableTroops += da.amt;
 					player.actions = player.actions[0..$-1];
