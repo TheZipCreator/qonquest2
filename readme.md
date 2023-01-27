@@ -22,6 +22,7 @@ A turn-based map strategy game. Sequel to my earlier terminal game Qonquest (thi
 * Fixed a bug where you'd get extra troops per turn
 ### 2.2.1
 * Added localization for Brazilian Portuguese and toki pona.
+* Added game name and free software notice.
 ## Credits
 TheZipCreator (me) - programming the game
 
